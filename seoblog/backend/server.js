@@ -13,8 +13,11 @@ app.use(morgan('dev')) //development mode which gives endpoints in the console
 app.use(bodyParser.json())
 app.use(cookieParser())
 
-//cors
-app.use(cors())
+//cors - deal with cross-origin requests
+if(process.env.NODE_ENV === 'development') {
+    app.use(cors({origin : process.env.CLIENT_URL}))
+}
+
 
 //routes
 app.get('/api', (req, res) => { //localhost:8000/api, response to this endpoint will be the current time
