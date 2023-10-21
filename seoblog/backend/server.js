@@ -3,26 +3,31 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
+const mongoose = require('mongoose')
 require('dotenv').config()
+
+//bring routes
+const blogRoutes = require('./routes/blog_routes');
 
 //app
 const app = express()
+
+//db
+mongoose.connect(process.env.DATABASE_CLOUD)
+.then(() => console.log('DB connected'));
 
 //middlewares
 app.use(morgan('dev')) //development mode which gives endpoints in the console
 app.use(bodyParser.json())
 app.use(cookieParser())
+//routes middleware
+app.use('/api', blogRoutes); //Start all routes with api
+
 
 //cors - deal with cross-origin requests
 if(process.env.NODE_ENV === 'development') {
     app.use(cors({origin : process.env.CLIENT_URL}))
 }
-
-
-//routes
-app.get('/api', (req, res) => { //localhost:8000/api, response to this endpoint will be the current time
-    res.json({time: Date().toString()})
-}) 
 
 //port
 const port = process.env.PORT || 8000 //access port variable from env file with default value of 8000
