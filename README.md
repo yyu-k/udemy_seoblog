@@ -14,5 +14,5 @@ Out of date things that needed to be changed:
 2. MongooseError: Model.prototype.save() no longer accepts a callback
 
 Notes:
-1. next 14.0.1 doesn't seem to work in Windows - run this in Linux or use WSL2
+1. next 14.0.1 doesn't seem to work in Windows - run this in Linux or use WSL2 (actually the problem seems to be that the directory name cannot contain the words "ude" in Windows for some reason) 
 2. mongoose "required" validation will fail if the setter depends on a promise (the promise will not be resolved in time - e.g. bcrypt.hash)
