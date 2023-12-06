@@ -15,16 +15,15 @@ import {
   DropdownItem,
   NavbarText,
 } from 'reactstrap';
+import {APP_NAME} from '../config';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-
   const toggle = () => setIsOpen(!isOpen);
-
   return (
     <div>
       <Navbar expand={'md'}>
-        <NavbarBrand href="/">reactstrap</NavbarBrand>
+        <NavbarBrand href="/">{APP_NAME}</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>
