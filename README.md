@@ -9,14 +9,21 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 4. Changed shortid to nanoid
 
 
+
 <h3>Out of date things that needed to be changed</h3>
 
-1. MongooseError: Query.prototype.exec() no longer accepts a callback
-2. MongooseError: Model.prototype.save() no longer accepts a callback
+<h5>Mongoose<h5>
+
+1. Query.prototype.exec() no longer accepts a callback
+2. Model.prototype.save() no longer accepts a callback
 
 <h5>Next JS</h5>
+
 1. pages-->index.js is no longer used; replaced pages router with app router. For the same reason, components --> Layout.js is no longer used (layout pages are within the "app" directory)
 2. charset and viewport are default fields, so there is no need to explicitly add them to the head as defined in the "_document.js" (now the root layout)
+3. Starting with Next.js 13, &ltLink> renders as &lta>, so attempting to use &lta> as a child is invalid.
+4. Change to accomodate the new reactstrap NavLink etc with next.JS Link, wrapped in functions within NavBarLinks.js, because "the child is a custom component that wraps an &lta> tag".
+
 
 Notes:
 1. next 14.0.1 doesn't seem to work in Windows - run this in Linux or use WSL2 (actually the problem seems to be that the directory name cannot contain the words "ude" in Windows for some reason) 

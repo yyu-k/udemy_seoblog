@@ -5,7 +5,6 @@ import {
   Collapse,
   Navbar,
   NavbarToggler,
-  NavbarBrand,
   Nav,
   NavItem,
   NavLink,
@@ -16,6 +15,7 @@ import {
   NavbarText,
 } from 'reactstrap';
 import {APP_NAME} from '../config';
+import {NewNavLink, NewNavbarBrand} from './NavBarLinks';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,12 +23,15 @@ const Header = () => {
   return (
     <div>
       <Navbar expand={'md'}>
-        <NavbarBrand href="/">{APP_NAME}</NavbarBrand>
+        <NewNavbarBrand href='/' name={APP_NAME}/>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>
             <NavItem>
-              <NavLink href="/components/">Components</NavLink>
+                <NewNavLink href='/signin' name='Sign In'/>
+            </NavItem>
+            <NavItem>
+                <NewNavLink href='/signup' name='Sign Up'/>
             </NavItem>
             <NavItem>
               <NavLink href="https://github.com/reactstrap/reactstrap">
