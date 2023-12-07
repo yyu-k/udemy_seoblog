@@ -7,10 +7,15 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 2. Using the winston module for logging instead of console.log
 3. Moved some constants to a general CONSTANTS.js file in root
 4. Changed shortid to nanoid
+5. When error is caught, the e.message should be returned instead of the Error object
 
 
 
 <h3>Out of date things that needed to be changed</h3>
+
+<h5>General<h5>
+1. Replaced process.browser with typeof window === 'object'.
+
 
 <h5>Mongoose<h5>
 
@@ -23,6 +28,9 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 2. charset and viewport are default fields, so there is no need to explicitly add them to the head as defined in the "_document.js" (now the root layout)
 3. Starting with Next.js 13, &ltLink> renders as &lta>, so attempting to use &lta> as a child is invalid.
 4. Changed to accomodate the new reactstrap NavLink etc with next.JS Link, wrapped in functions within NavBarLinks.js, because "the child is a custom component that wraps an &lta> tag". Note that NavbarBrand also requires a React.forwardRef wrapper. 
+5. 'use client' must occasionally be added for client side renders involving useState etc
+6. useRouter must be from next/navigation and not next/router when using app router
+7. PROBLEMATIC: the previous way of dynamically rendering the navigation bar to reflect login status was to use a function to pull values from localStorage, and render the bar depending on whether the function returned a "truthy" value e.g. {localStorageFunction && showSignIn()}. This did not work - there are hydration issues, and after those are resolved, the navigation bar would only re-render with a refresh. The solution was to trigger an event via window.dispatchEvent on login/logout, then use window.addEventListener on the useEffect function. See https://stackoverflow.com/questions/56660153/how-to-listen-to-localstorage-value-changes-in-react. Note that alternatives such as https://stackoverflow.com/questions/61178240/useeffect-does-not-listen-for-localstorage, by themselves, do not work. 
 
 
 Notes:

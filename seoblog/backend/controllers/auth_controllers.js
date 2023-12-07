@@ -27,14 +27,14 @@ exports.signup = (req, res) => {
                     })
                     .catch((err) => {
                         return res.status(400).json({ //bad request
-                            error: err
+                            error: err.message //edited from just err
                         })
                     })                
                 }
         })
         .catch((err) => {
             return res.status(400).json({ //bad request
-                error: err
+                error: err.message
             })
         })
 }
@@ -75,7 +75,9 @@ exports.signin = (req, res) => {
 }
 
 exports.signout = (req, res) => {
-    res.clearCookie("token")
+    res.clearCookie("token", {
+        expiresIn: '1d'
+    })
     return res.json({
         message : "Signout success - cookie cleared"
     })

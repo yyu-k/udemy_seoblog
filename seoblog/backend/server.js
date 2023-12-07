@@ -18,9 +18,10 @@ mongoose.connect(process.env.DATABASE_CLOUD)
 .then(() => console.log('DB connected'));
 
 //middlewares
-app.use(morgan('dev')) //development mode which gives endpoints in the console
-app.use(bodyParser.json())
-app.use(cookieParser())
+app.use(morgan('dev')); //development mode which gives endpoints in the console
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors()); //enable all cross origin requests
 //routes middleware
 app.use('/api', blogRoutes); //Start all routes with api
 app.use('/api', authRoutes); 

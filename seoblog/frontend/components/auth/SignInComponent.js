@@ -1,12 +1,12 @@
 'use client'
 
 import {useState} from 'react';
-import { signup } from '@/actions/auth';
+import { signin, saveData } from '@/actions/auth';
+import { useRouter } from 'next/navigation';
 
-
-const SignUpComponent = () => {
+const SignInComponent = () => {
+    const router = useRouter();
     const [values, setValues] = useState({
-        name: 'testName',
         email: 'testEmail@email.com',
         password: 'testPassword',
         error: '',
@@ -15,20 +15,23 @@ const SignUpComponent = () => {
         showForm: true
     })
 
-    const {name, email, password, error, loading, message, showForm} = values;
+    const {email, password, error, loading, message, showForm} = values;
 
 
     const handleSubmit = (e) => {
         e.preventDefault(); //browser will show network error otherwise
         setValues({...values, loading : true, error: false});
-        const user = {name, email, password};
-        signup(user)
+        const user = {email, password};
+        signin(user)
         .then((data) => { //this assumes that the API gives a string as an error instead of the actual error object
             if (data.error) {
                 setValues({...values, error: data.error, loading: false});
                 console.log(data.error); //Added for debugging
             }else {
-                setValues({...values, name: '', email: '', password: '', error: '', loading: false, message: data.message, showForm: false});
+                //save user token to cookie and save user info to local storage
+                saveData(data, () => {
+                    router.push('/'); //redirect the user to some other page based on user identity
+                });
             }
         } 
         )
@@ -50,13 +53,9 @@ const SignUpComponent = () => {
         return (message ? <div className='alert alert-info'>{message}</div> : '');
     }
 
-    const signupForm = () => {
+    const signinForm = () => {
         return (
             <form onSubmit={handleSubmit}>
-                <div className='form-group' style={{marginBottom: 20}}>
-                    <input value={name} onChange={handleChange('name')} type="text" className="form-control" placeholder="Type your name"/>
-                </div>
-
                 <div className='form-group' style={{marginBottom: 20}}>
                     <input value={email} onChange={handleChange('email')} type="email" className="form-control" placeholder="Type your email"/>
                 </div>
@@ -66,7 +65,7 @@ const SignUpComponent = () => {
                 </div>
 
                 <div>
-                    <button className="btn btn-primary">Sign Up</button>
+                    <button className="btn btn-primary">Sign In</button>
                 </div>
 
             </form>
@@ -77,10 +76,10 @@ const SignUpComponent = () => {
             {showError()}
             {showLoading()}
             {showMessage()}
-            {showForm && signupForm()} 
+            {showForm && signinForm()} 
         </>
     ) //notice that signupForm() will not be evaluated if showForm is false
     //the page will be redrawn when there is a change of state, and showError etc will run if necessary.
 };
 
-export default SignUpComponent;
+export default SignInComponent;
