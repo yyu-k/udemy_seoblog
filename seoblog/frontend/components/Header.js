@@ -16,7 +16,7 @@ import {
 } from 'reactstrap';
 import {APP_NAME} from '../config';
 import {NewNavLink, NewNavbarBrand} from './NavBarLinks';
-import {signout, getLocalStorageUser} from '@/actions/auth';
+import {signout} from '@/actions/auth';
 import { useRouter } from 'next/navigation';
 
 const Header = () => {

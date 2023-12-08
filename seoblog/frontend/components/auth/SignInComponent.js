@@ -1,8 +1,9 @@
 'use client'
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import { signin, saveData } from '@/actions/auth';
 import { useRouter } from 'next/navigation';
+import { getLocalStorageUser } from '@/actions/auth';
 
 const SignInComponent = () => {
     const router = useRouter();
@@ -14,8 +15,16 @@ const SignInComponent = () => {
         message: '',
         showForm: true
     })
-
     const {email, password, error, loading, message, showForm} = values;
+
+    //don't show the page if user is already signed in
+    useEffect(() => {
+        const isSignedIn = !!getLocalStorageUser();
+        if (isSignedIn) {
+            setValues({...values, showForm : false});
+            router.replace('/');
+        }
+    }, []);
 
 
     const handleSubmit = (e) => {
@@ -40,9 +49,17 @@ const SignInComponent = () => {
     const handleChange = (name) => (e) => { //curried function -> returns a function that takes in the e
         setValues({...values, error: false, [name]: e.target.value})
     }
-    
+   
     const showLoading = () => {
         return (loading ? <div className='alert alert-info'>Loading...</div> : '');
+    }
+
+    const showAlreadySignedIn = () => {
+        return (
+            <div className='alert alert-info'>
+                You are already signed in. Redirecting...
+            </div>
+        )
     }
 
     const showError = () => {
@@ -71,12 +88,22 @@ const SignInComponent = () => {
             </form>
         )
     }
-    return (
-        <>
+
+    const allSignInComponents = () => {
+        return (
+            <>
             {showError()}
             {showLoading()}
             {showMessage()}
-            {showForm && signinForm()} 
+            {showForm && signinForm()}
+            </>  
+        )
+    }
+
+    return (
+        <>  
+         {showForm ? allSignInComponents() :
+            showAlreadySignedIn()}
         </>
     ) //notice that signupForm() will not be evaluated if showForm is false
     //the page will be redrawn when there is a change of state, and showError etc will run if necessary.

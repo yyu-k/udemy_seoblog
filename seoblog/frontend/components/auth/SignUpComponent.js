@@ -1,10 +1,11 @@
 'use client'
 
-import {useState} from 'react';
-import { signup } from '@/actions/auth';
-
+import {useState, useEffect} from 'react';
+import { signup, getLocalStorageUser } from '@/actions/auth';
+import { useRouter } from 'next/navigation';
 
 const SignUpComponent = () => {
+    const router = useRouter();
     const [values, setValues] = useState({
         name: 'testName',
         email: 'testEmail@email.com',
@@ -17,6 +18,14 @@ const SignUpComponent = () => {
 
     const {name, email, password, error, loading, message, showForm} = values;
 
+    //don't show the page if user is already signed in
+    useEffect(() => {
+        const isSignedIn = !!getLocalStorageUser();
+        if (isSignedIn) {
+            setValues({...values, showForm : false});
+            router.replace('/');
+        }
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault(); //browser will show network error otherwise
@@ -27,7 +36,7 @@ const SignUpComponent = () => {
             if (data.error) {
                 setValues({...values, error: data.error, loading: false});
                 console.log(data.error); //Added for debugging
-            }else {
+            } else {
                 setValues({...values, name: '', email: '', password: '', error: '', loading: false, message: data.message, showForm: false});
             }
         } 
@@ -36,6 +45,14 @@ const SignUpComponent = () => {
 
     const handleChange = (name) => (e) => { //curried function -> returns a function that takes in the e
         setValues({...values, error: false, [name]: e.target.value})
+    }
+
+    const showAlreadySignedIn = () => {
+        return (
+            <div className='alert alert-info'>
+                You are already signed in. Redirecting...
+            </div>
+        )
     }
     
     const showLoading = () => {
@@ -72,12 +89,21 @@ const SignUpComponent = () => {
             </form>
         )
     }
-    return (
-        <>
+    const allSignInComponents = () => {
+        return (
+            <>
             {showError()}
             {showLoading()}
             {showMessage()}
-            {showForm && signupForm()} 
+            {showForm && signupForm()}
+            </>  
+        )
+    }
+
+    return (
+        <>  
+         {showForm ? allSignInComponents() :
+            showAlreadySignedIn()}
         </>
     ) //notice that signupForm() will not be evaluated if showForm is false
     //the page will be redrawn when there is a change of state, and showError etc will run if necessary.
