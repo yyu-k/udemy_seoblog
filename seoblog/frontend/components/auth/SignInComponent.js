@@ -35,11 +35,15 @@ const SignInComponent = () => {
         .then((data) => { //this assumes that the API gives a string as an error instead of the actual error object
             if (data.error) {
                 setValues({...values, error: data.error, loading: false});
-                console.log(data.error); //Added for debugging
             }else {
                 //save user token to cookie and save user info to local storage
                 saveData(data, () => {
-                    router.push('/'); //redirect the user to some other page based on user identity
+                    const localUser = getLocalStorageUser();
+                    if (localUser && localUser.role === 1) {
+                        router.push('/admin'); //redirect the user to admin if role is 1
+                    } else {
+                        router.push('/user');
+                    }
                 });
             }
         } 

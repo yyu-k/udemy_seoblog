@@ -12,7 +12,7 @@ router.get('/signout', auth_controllers.signout);
 //test for varifying jwt was signed with secret, using express-jwt middleware
 router.get('/secret', auth_controllers.require_sign_in, (req, res) => {
     return res.json({
-        message: 'you have accessed a page that only a logged in individual with the correct JWT should be able to!'
+        user : req.auth
     })
 })
 

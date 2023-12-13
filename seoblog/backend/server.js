@@ -9,6 +9,7 @@ require('dotenv').config()
 //bring routes
 const blogRoutes = require('./routes/blog_routes');
 const authRoutes = require('./routes/auth_routes');
+const userRoutes = require('./routes/user_routes');
 
 //app
 const app = express()
@@ -25,6 +26,7 @@ app.use(cors()); //enable all cross origin requests
 //routes middleware
 app.use('/api', blogRoutes); //Start all routes with api
 app.use('/api', authRoutes); 
+app.use('/api', userRoutes);
 
 
 //cors - deal with cross-origin requests
