@@ -11,19 +11,20 @@ const SignUpComponent = () => {
         email: 'testEmail@email.com',
         password: 'testPassword',
         error: '',
-        loading: false,
+        loading: true,
         message: '',
-        showForm: true
+        showForm: true,
     })
 
-    const {name, email, password, error, loading, message, showForm} = values;
+    const {name, email, password, error, loading, message, showForm, isSignedIn} = values;
 
     //don't show the page if user is already signed in
     useEffect(() => {
         const isSignedIn = !!getLocalStorageUser();
         if (isSignedIn) {
-            setValues({...values, showForm : false});
-            router.replace('/');
+            router.replace('/user');
+        } else {
+            setValues({...values, loading : false});
         }
     }, []);
 
@@ -89,9 +90,9 @@ const SignUpComponent = () => {
             </form>
         )
     }
-    const allSignInComponents = () => {
+    const allSignUpComponents = () => {
         return (
-            <>
+            <> 
             {showError()}
             {showLoading()}
             {showMessage()}
@@ -100,9 +101,16 @@ const SignUpComponent = () => {
         )
     }
 
+    if (loading) {
+        return (
+            <>
+            {showLoading()}
+            </>
+        )
+    } 
     return (
         <>  
-         {showForm ? allSignInComponents() :
+         {!isSignedIn ? allSignUpComponents() :
             showAlreadySignedIn()}
         </>
     ) //notice that signupForm() will not be evaluated if showForm is false

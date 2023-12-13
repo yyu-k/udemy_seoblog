@@ -103,7 +103,7 @@ export const getLocalStorageUser = () => {
         const cookieChecked = getCookie('token'); //check that the blog's cookie is set after login
         const userLocalStorage = localStorage.getItem('user'); //get the data saved with respect to the particular user
         if (cookieChecked) {
-            return userLocalStorage;
+            return JSON.parse(userLocalStorage);
         } else {
             return '';
         }

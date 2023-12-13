@@ -15,6 +15,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 
 <h5>General<h5>
 1. Replaced process.browser with typeof window === 'object'.
+2. express-jwt: The decoded JWT payload is now available as req.auth rather than req.user
 
 
 <h5>Mongoose<h5>
@@ -31,6 +32,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 5. 'use client' must occasionally be added for client side renders involving useState etc
 6. useRouter must be from next/navigation and not next/router when using app router
 7. PROBLEMATIC: the previous way of dynamically rendering the navigation bar to reflect login status was to use a function to pull values from localStorage, and render the bar depending on whether the function returned a "truthy" value e.g. {localStorageFunction() && showSignIn()}. This did not work - there are hydration issues, and after those are resolved, the navigation bar would only re-render with a refresh. The solution was to trigger an event via window.dispatchEvent on login/logout, then use window.addEventListener on the useEffect function. See https://stackoverflow.com/questions/56660153/how-to-listen-to-localstorage-value-changes-in-react. Note that alternatives such as https://stackoverflow.com/questions/61178240/useeffect-does-not-listen-for-localstorage, by themselves, do not work. 
+8. On some pages with redirection, e.g. on the sign up page, to avoid flashing before redirection by using a "loading" state coupled with UseEffect. See e.g. https://stackoverflow.com/questions/75786885/preventing-flashing-of-page-when-redirecting. Not done on all for learning purpose.
 
 
 Notes:
@@ -38,3 +40,4 @@ Notes:
 2. mongoose "required" validation will fail if the setter depends on a promise (the promise will not be resolved in time - e.g. bcrypt.hash)
 3. The reactstrap functions MUST be placed within the body tags (as opposed to within html etc)
 4. Arguments for the navbar in reactstrap needs to be keyed in manually (e.g. expand={'md'}), otherwise the default values will hold and the navbar will not change its formatting regardless of screensize etc.
+5. admin password is adminpassword

@@ -88,3 +88,50 @@ exports.require_sign_in = expressjwt({
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"]
 })
+
+//middleware to check if user exists/who the user is before redirecting
+//essentailyl makes the user available in req.profile
+exports.authMiddleware = (req, res, next) => { //middleware requires next
+    const authUserId = req.auth._id;
+    User.findById({_id: authUserId}).exec()
+    .then((user) => {
+        if (user) {
+            req.profile = user;
+            next();
+        } else {
+            return res.status(400).json({
+                error: 'user not found'
+            });
+        }
+    })
+    .catch((err) => {
+        return res.status(400).json({
+            error: 'Error encountered while trying to find user by the relevant _id'
+        })
+    })
+}
+
+//middleware to check if user.role === 1 before allowing the user to proceeed down the specified route
+exports.adminMiddleware = (req, res, next) => { //middleware requires next
+    const adminUserId = req.auth._id;
+    User.findById({_id: adminUserId}).exec()
+    .then((user) => {
+        if (user && user.role === 1) {
+            req.profile = user;
+            next();
+        } else if (!user) {
+            return res.status(400).json({
+                error: 'user not found'
+            });
+        } else {
+            return res.status(400).json({
+                error: 'Admin resource - access denied'
+            })
+        }
+    })
+    .catch((err) => {
+        return res.status(400).json({
+            error: 'Error encountered while trying to find user by the relevant _id'
+        })
+    })
+}
