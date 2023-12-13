@@ -16,6 +16,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 <h5>General<h5>
 1. Replaced process.browser with typeof window === 'object'.
 2. express-jwt: The decoded JWT payload is now available as req.auth rather than req.user
+2. express-jwt: The decoded JWT payload is now available as req.auth rather than req.user
 
 
 <h5>Mongoose<h5>
