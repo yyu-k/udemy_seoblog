@@ -18,7 +18,6 @@ const Private = ({children}) => {
     if (loading) {
         return (
             <>
-            <Loading/>
             </>
         )
     } else {

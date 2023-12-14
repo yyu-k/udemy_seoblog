@@ -20,7 +20,6 @@ const Admin = ({children}) => {
     if (loading) {
         return (
             <>
-            <Loading/>
             </>
         )
     } else {

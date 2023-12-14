@@ -16,10 +16,14 @@ import {
 } from 'reactstrap';
 import {APP_NAME} from '../config';
 import {NewNavLink, NewNavbarBrand} from './NavBarLinks';
-import {signout} from '@/actions/auth';
+import {signout, getLocalStorageUser} from '@/actions/auth';
 import { useRouter } from 'next/navigation';
 
 const Header = () => {
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggle = () => setIsOpen(!isOpen);
+  const [user, setUser] = useState('');
 
   const ShowSignInSignUp = ({bool}) => {
     if (!bool) {
@@ -43,6 +47,18 @@ const Header = () => {
     }
     const router = useRouter();
     return (
+      <>
+      <NavItem>
+        <NavLink style={{'cursor': 'pointer'}} onClick={() => {
+          if (user.role === 1) {
+            router.push('/admin');
+          } else {
+            router.push('/user');
+          }
+        }}>
+        Dashboard
+        </NavLink>
+      </NavItem>
       <NavItem>
         <NavLink style={{'cursor': 'pointer'}} onClick={() => signout(() => 
           router.replace('/signin') //prevents user from going back to the invalid signout page by backing
@@ -50,18 +66,16 @@ const Header = () => {
         Sign Out
         </NavLink>
       </NavItem>
+      </>
     )
   }
 
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
-  const [user, setUser] = useState('');
   useEffect(
     () => {
       function checkUserData(){
-        const item = window.localStorage.getItem('user');
-        if (item) {
-          setUser(JSON.parse(item).name);
+        const user = getLocalStorageUser();
+        if (user) {
+          setUser(user);
         } else {
           setUser('');
         };
@@ -72,7 +86,7 @@ const Header = () => {
       window.removeEventListener("storage", checkUserData);
     };
   }, []);
-  
+ 
   return (
     <div>
       <Navbar expand={'md'}>
@@ -99,7 +113,7 @@ const Header = () => {
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
-          <NavbarText>{user}</NavbarText>
+          <NavbarText>{user.name}</NavbarText>
         </Collapse>
       </Navbar>
     </div>
