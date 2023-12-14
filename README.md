@@ -7,7 +7,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 2. Using the winston module for logging instead of console.log
 3. Moved some constants to a general CONSTANTS.js file in root
 4. Changed shortid to nanoid
-5. When error is caught, the e.message should be returned instead of the Error object
+5. When error is caught, the e.message should be returned instead of the Error object. More generally changes were made to error handling to simplify the processing of the error message. 
 
 
 
@@ -15,7 +15,6 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 
 <h5>General<h5>
 1. Replaced process.browser with typeof window === 'object'.
-2. express-jwt: The decoded JWT payload is now available as req.auth rather than req.user
 2. express-jwt: The decoded JWT payload is now available as req.auth rather than req.user
 
 
