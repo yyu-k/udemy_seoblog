@@ -12,7 +12,7 @@ router.post('/category/create',
     auth_controllers.adminMiddleware,
     category_controllers.create);
 
-router.get('/categories', category_controllers.list)
+router.get('/category/list', category_controllers.list)
 router.get('/category/:slug', category_controllers.read)
 
 router.delete('/category/:slug',

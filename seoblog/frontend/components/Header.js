@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
+import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
 import {
   Collapse,
   Navbar,
@@ -19,8 +20,10 @@ import {NewNavLink, NewNavbarBrand} from './NavBarLinks';
 import {signout, getLocalStorageUser} from '@/actions/auth';
 import { useRouter } from 'next/navigation';
 
-const Header = () => {
 
+
+const Header = () => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const [user, setUser] = useState('');
@@ -45,7 +48,6 @@ const Header = () => {
     if (!bool) {
       return 
     }
-    const router = useRouter();
     return (
       <>
       <NavItem>
@@ -89,6 +91,12 @@ const Header = () => {
  
   return (
     <div>
+        <ProgressBar
+          height="4px"
+          color="#0000FF"
+          options={{ showSpinner: false }}
+          shallowRouting
+        />
       <Navbar expand={'md'}>
         <NewNavbarBrand href='/' name={APP_NAME}/>
         <NavbarToggler onClick={toggle} />

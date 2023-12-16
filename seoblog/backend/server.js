@@ -11,6 +11,7 @@ const blogRoutes = require('./routes/blog_routes');
 const authRoutes = require('./routes/auth_routes');
 const userRoutes = require('./routes/user_routes');
 const categoryRoutes = require('./routes/category_routes');
+const tagRoutes = require('./routes/tag_routes');
 
 //app
 const app = express()
@@ -29,6 +30,7 @@ app.use('/api', blogRoutes); //Start all routes with api
 app.use('/api', authRoutes); 
 app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
+app.use('/api', tagRoutes);
 
 
 //cors - deal with cross-origin requests

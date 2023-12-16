@@ -16,6 +16,8 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 <h5>General<h5>
 1. Replaced process.browser with typeof window === 'object'.
 2. express-jwt: The decoded JWT payload is now available as req.auth rather than req.user
+3. Replaced nProgress with next-nprogress-bar for compatibility with app router
+4. zeit/next-css is no longer necessary due to improved CSS support in next
 
 
 <h5>Mongoose<h5>
@@ -27,7 +29,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 
 1. pages-->index.js is no longer used; replaced pages router with app router. For the same reason, components --> Layout.js is no longer used (layout pages are within the "app" directory)
 2. charset and viewport are default fields, so there is no need to explicitly add them to the head as defined in the "_document.js" (now the root layout)
-3. Starting with Next.js 13, &ltLink> renders as &lta>, so attempting to use &lta> as a child is invali (unless legacy options are used)
+3. Starting with Next.js 13, &ltLink> renders as &lta>, so attempting to use &lta> as a child is invalid (unless legacy options are used)
 4. Changed to accomodate the new reactstrap NavLink etc with next.JS Link, wrapped in functions within NavBarLinks.js, because "the child is a custom component that wraps an &lta> tag". Note that NavbarBrand also requires a React.forwardRef wrapper. 
 5. 'use client' must occasionally be added for client side renders involving useState etc
 6. useRouter must be from next/navigation and not next/router when using app router

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const categories_schema = new mongoose.Schema({
+const tag_schema = new mongoose.Schema({
     name : {
         type : String,
         trim : true, //remove whitespace
@@ -14,4 +14,4 @@ const categories_schema = new mongoose.Schema({
     }
 }, {timestamp : true});
 
-module.exports = mongoose.model("Category", categories_schema);
+module.exports = mongoose.model("Tag", tag_schema);
