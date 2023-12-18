@@ -11,10 +11,16 @@ export default function RootLayout({ children }) {
   return (
     <React.Fragment>
     <html lang="en">
-      <body>
+      <body className="d-flex flex-column min-vh-100">
         <Header />
         {children}
-        <p>footer</p>
+        <footer className="mt-auto" style={{marginBottom : 30}}>
+          <div className="container">
+            <span className="text-muted" style={{display: 'flex', justifyContent: 'center'}}> 
+              Place sticky footer content here.
+            </span>
+          </div>
+        </footer>
       </body>
     </html>
     </React.Fragment>
