@@ -1,42 +1,40 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { getLocalStorageUser, getCookie } from "@/actions/auth";
-import { createCategory, getAllCategories, deleteCategory } from "@/actions/category";
+import { getCookie } from "@/actions/auth";
+import { createTag, getAllTags, deleteTag } from "@/actions/tag";
 
-const Category = () => {
+const Tag = () => {
     const [values, setValues] = useState({
-        catName : '',
+        tagName : '',
         error: '',
         success: false,
-        categories: [],
+        tags: [],
         removed: false,
         reload : false
     });
 
-    const {catName, error, success, categories, removed, reload} = values;
+    const {tagName, error, success, tags, removed, reload} = values;
     const token = getCookie('token');
 
-    const loadCategories = () => {
-        getAllCategories().then((data) => {
+    const loadTags = () => {
+        getAllTags().then((data) => {
             if (data.error) {
                 setValues({...values, error : data.error});
             } else {
-                setValues({...values, categories : data})
+                setValues({...values, tags : data})
             }
         })
     }
         
     useEffect(() => {
-        loadCategories()
+        loadTags()
     }, [reload])
 
     const deleteConfirm = (c) => {
-        let answer = window.confirm(`Are you sure you want to delete ${c.name}`)
+        let answer = window.confirm(`Are you sure you want to delete the Tag ${c.name}`)
         if(answer) {
-            deleteCategory(c.slug, token).then((data) => {
+            deleteTag(c.slug, token).then((data) => {
                 if (data.error) {
                     setValues({...values, error : data.error});
                 } else {
@@ -46,8 +44,8 @@ const Category = () => {
         }
     }
 
-    const showCategories = () => {
-        return categories.map((c, i) => { //c is the individual object within the array, i is the index
+    const showTags = () => {
+        return tags.map((c, i) => { //c is the individual object within the array, i is the index
             return (
                 <button
                     onDoubleClick={() => deleteConfirm(c)} 
@@ -62,23 +60,23 @@ const Category = () => {
 
     const clickSubmit = (e) => {
         e.preventDefault(); //prevents the page from reloading on submit
-        createCategory({name: catName}, token)
+        createTag({name: tagName}, token)
         .then((data) => {
             if (data.error) {
                 setValues({...values, error : data.error, success : false});
             } else {
-                setValues({...values, error: '', success: true, catName: '', reload: !reload});
+                setValues({...values, error: '', success: true, tagName: '', reload: !reload});
             }
         })
     }
 
     const handleChange = (e) => {
-        setValues({...values, categories, catName: e.target.value, error: '', success: false, removed : ''}) //clear out pre-existing issues
+        setValues({...values, tags, tagName: e.target.value, error: '', success: false, removed : ''}) //clear out pre-existing issues
     }
 
     const showSuccess = () => {
         if(success) {
-            return <p className="text-success">Category is created</p>
+            return <p className="text-success">Tag is created</p>
         }
     }
 
@@ -90,7 +88,7 @@ const Category = () => {
 
     const showRemoved = () => {
         if(removed) {
-            return <p className="text-danger">Category is removed</p>
+            return <p className="text-danger">Tag is removed</p>
         }
     }
 
@@ -98,16 +96,15 @@ const Category = () => {
         setValues({...values, error : '', success : false, removed : false});
     }
 
-
-    const newCategoryForm = () => {
+    const newTagForm = () => {
         return (
             <form onSubmit={clickSubmit}>
             <div className="form-group">
-                <label className="text-muted">Category Name</label>
+                <label className="text-muted">Tag Name</label>
                 <input type="text" 
                     className="form-control" 
                     onChange={handleChange}
-                    value={catName}
+                    value={tagName}
                     required/>
             </div>
             <div>
@@ -126,15 +123,15 @@ const Category = () => {
         {showError()}
         {showRemoved()}
         <div onMouseMove = {mouseMoveHandler}>
-            {newCategoryForm()}
+            {newTagForm()}
             <p className="text-muted mt-3">
-                Double click the button to delete the respective category
+                Double click the button to delete the respective tag
             </p>
-            {showCategories()}
+            {showTags()}
         </div>
         </>
     )
 
 };
 
-export default Category;
+export default Tag;

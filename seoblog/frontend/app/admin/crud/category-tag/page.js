@@ -1,5 +1,6 @@
 import Admin from "@/components/auth/Admin"
 import Category from "@/components/crud/Category"
+import Tag from "@/components/crud/Tag"
 
 export default function Page() {
     return (
@@ -13,7 +14,7 @@ export default function Page() {
             <Category/>
           </div>
           <div className="col-md-6">
-            <p>tag</p>
+            <Tag/>
           </div>
         </div>
       </Admin>

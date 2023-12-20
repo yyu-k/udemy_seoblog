@@ -13,7 +13,7 @@ export default function Page() {
             <ul className="list-group">
               <li className="list-group-item">
                 <Link href="/admin/crud/category-tag">
-                  Create Category
+                  Manage Categories/Tags
                 </Link>
               </li>
               <li className="list-group-item">Chickens</li>
