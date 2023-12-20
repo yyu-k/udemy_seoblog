@@ -8,8 +8,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 3. Moved some constants to a general CONSTANTS.js file in root
 4. Changed shortid to nanoid
 5. When error is caught, the e.message should be returned instead of the Error object. More generally changes were made to error handling to simplify the processing of the error message / display more details to the front end
-
-
+6. Amended require_sign_in so that absence of authorization token will be caught and the user will receive a 401 with a JSON (instead of the whole error object)
 
 <h3>Out of date things that needed to be changed</h3>
 
@@ -19,11 +18,18 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 3. Replaced nProgress with next-nprogress-bar for compatibility with app router
 4. zeit/next-css is no longer necessary due to improved CSS support in next
 
-
 <h5>Mongoose<h5>
 
 1. Query.prototype.exec() no longer accepts a callback
 2. Model.prototype.save() no longer accepts a callback
+
+<h5>Random extensions<h5>
+1. Slugify: toLowerCase is now an option ({lower : true})
+
+<h5>Formidable<h5>
+1. Formidable: Method of creation/altering options slightly changed
+2. Formidable: string values of fields are now placed in an array, to be extracted with firstValues. Similar issue with photo properties. 
+3. Some fields read from form.parse() has a different name e.g. files.photo.mimetype instead of files.photo.type, where photo is the key of the form.
 
 <h5>Next JS</h5>
 
@@ -45,3 +51,4 @@ Notes:
 3. The reactstrap functions MUST be placed within the body tags (as opposed to within html etc)
 4. Arguments for the navbar in reactstrap needs to be keyed in manually (e.g. expand={'md'}), otherwise the default values will hold and the navbar will not change its formatting regardless of screensize etc.
 5. admin password is adminpassword
+6. The problem with using the url as parameters for the purpose of API calls is that one has to be sure the parameters are always in English - an api call to e.g. /tag/delete/日本語 probably wouldn't work well

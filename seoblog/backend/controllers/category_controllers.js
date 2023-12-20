@@ -1,18 +1,6 @@
+const { default: generateDBErrorMsg } = require('../helpers/generateDBErrorMsg');
 const Category = require('../models/categories_model');
 const slugify = require('slugify');
-
-const generateErrorMsg = (err) => {
-    let errorMsg;
-    switch(err.code) {
-        case 11000:
-        case 11001:
-            errorMsg = 'Duplicate Categories Error - Category already exists';
-            break;
-        default:
-            errorMsg = 'Something has gone wrong with the database operation';
-    }
-    return `Error ${err.code}: ${errorMsg}`;
-}
 
 exports.create = (req, res) => {
     const { name } = req.body; 
@@ -26,7 +14,7 @@ exports.create = (req, res) => {
     })
     .catch((err) => {
         res.status(400).json({
-            error : generateErrorMsg(err)
+            error : generateDBErrorMsg(err)
         });
     })
 }
@@ -38,7 +26,7 @@ exports.list = (req, res) => {
     })
     .catch((err) => {
         res.status(400).json({
-            error: generateErrorMsg(err)
+            error: generateDBErrorMsg(err)
         });
     })
 }
@@ -53,7 +41,7 @@ exports.read = (req, res) => {
     })
     .catch((err) => {
         res.status(400).json({
-            error : generateErrorMsg(err)
+            error : generateDBErrorMsg(err)
         });
     });
 }
@@ -69,7 +57,7 @@ exports.remove = (req, res) => {
     })
     .catch((err) => {
         res.status(400).json({
-            error : generateErrorMsg(err)
+            error : generateDBErrorMsg(err)
         });
     });
 }

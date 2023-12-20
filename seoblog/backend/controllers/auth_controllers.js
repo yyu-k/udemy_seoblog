@@ -84,10 +84,21 @@ exports.signout = (req, res) => {
 }
 
 //this is middleware, placed between the routes and the actual processing logic in the routes file
-exports.require_sign_in = expressjwt({
-    secret: process.env.JWT_SECRET,
-    algorithms: ["HS256"]
-})
+exports.require_sign_in = (req, res, next) => {
+    const nextWithError = (err) => {
+        if (err) {
+          return (res.status(err.status).json({
+            error: err.message
+          }))
+        }
+        next();
+      }
+    // Authenticate as usual
+    return expressjwt({
+        secret: process.env.JWT_SECRET,
+        algorithms: ["HS256"]
+    })(req, res, nextWithError)
+}
 
 //middleware to check if user exists/who the user is before redirecting
 //essentailyl makes the user available in req.profile
