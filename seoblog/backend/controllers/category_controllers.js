@@ -1,4 +1,4 @@
-const { default: generateDBErrorMsg } = require('../helpers/generateDBErrorMsg');
+const { generateDBErrorMsg } = require('../helpers/generateDBErrorMsg');
 const Category = require('../models/categories_model');
 const slugify = require('slugify');
 

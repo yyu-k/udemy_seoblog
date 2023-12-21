@@ -9,6 +9,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 4. Changed shortid to nanoid
 5. When error is caught, the e.message should be returned instead of the Error object. More generally changes were made to error handling to simplify the processing of the error message / display more details to the front end
 6. Amended require_sign_in so that absence of authorization token will be caught and the user will receive a 401 with a JSON (instead of the whole error object)
+7. Amended the changes to input type=file (which is hidden) so that the uploaded file's name continues to be displayed.
 
 <h3>Out of date things that needed to be changed</h3>
 
@@ -17,6 +18,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 2. express-jwt: The decoded JWT payload is now available as req.auth rather than req.user
 3. Replaced nProgress with next-nprogress-bar for compatibility with app router
 4. zeit/next-css is no longer necessary due to improved CSS support in next
+5. JSON.stringify and JSON.parse are not necessary for various parts involving saving to local storage
 
 <h5>Mongoose<h5>
 
@@ -39,8 +41,9 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 4. Changed to accomodate the new reactstrap NavLink etc with next.JS Link, wrapped in functions within NavBarLinks.js, because "the child is a custom component that wraps an &lta> tag". Note that NavbarBrand also requires a React.forwardRef wrapper. 
 5. 'use client' must occasionally be added for client side renders involving useState etc
 6. useRouter must be from next/navigation and not next/router when using app router
-7. PROBLEMATIC: the previous way of dynamically rendering the navigation bar to reflect login status was to use a function to pull values from localStorage, and render the bar depending on whether the function returned a "truthy" value e.g. {localStorageFunction() && showSignIn()}. This did not work - there are hydration issues, and after those are resolved, the navigation bar would only re-render with a refresh. The solution was to trigger an event via window.dispatchEvent on login/logout, then use window.addEventListener on the useEffect function. See https://stackoverflow.com/questions/56660153/how-to-listen-to-localstorage-value-changes-in-react. Note that alternatives such as https://stackoverflow.com/questions/61178240/useeffect-does-not-listen-for-localstorage, by themselves, do not work. 
+7. The previous way of dynamically rendering the navigation bar to reflect login status was to use a function to pull values from localStorage, and render the bar depending on whether the function returned a "truthy" value e.g. {localStorageFunction() && showSignIn()}. This did not work - there are hydration issues, and after those are resolved, the navigation bar would only re-render with a refresh. The solution was to trigger an event via window.dispatchEvent on login/logout, then use window.addEventListener on the useEffect function. See https://stackoverflow.com/questions/56660153/how-to-listen-to-localstorage-value-changes-in-react. Note that alternatives such as https://stackoverflow.com/questions/61178240/useeffect-does-not-listen-for-localstorage, by themselves, do not work. 
 8. On some pages with redirection, e.g. on the sign up page, to avoid flashing before redirection by using a "loading" state coupled with UseEffect. See e.g. https://stackoverflow.com/questions/75786885/preventing-flashing-of-page-when-redirecting. Not done on all for learning purpose.
+9. withRouter does not work with the app router. Various workarounds. 
 
 <h5>CSS/Bootstrap</h5>
 1. Margins: ml/mr has been replaced with ms (start) and me (end). See https://stackoverflow.com/questions/69301335/bootstrap-padding-left-and-right-is-not-working

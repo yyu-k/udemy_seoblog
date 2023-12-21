@@ -16,7 +16,11 @@ export default function Page() {
                   Manage Categories/Tags
                 </Link>
               </li>
-              <li className="list-group-item">Chickens</li>
+              <li className="list-group-item">
+                <Link href="/admin/crud/blog">
+                  Create Blog
+                </Link>
+              </li>
             </ul>
           </div>
           <div className="col-md-8">
