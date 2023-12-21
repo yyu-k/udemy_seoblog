@@ -24,7 +24,7 @@ const blogSchema = new mongoose.Schema({
     },
     excerpt : {
         type : String,
-        required : false,
+        required : true,
         max : 1000
     },
     metaTitle : {

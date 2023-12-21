@@ -12,7 +12,7 @@ const { stripHtml } = require('string-strip-html');
 
 const { logger } = require('../backend_logger');
 const { generateDBErrorMsg } = require('../helpers/generateDBErrorMsg');
-
+const { smartTrim } = require('../helpers/smartTrim');
 
 exports.create = (req,res) => {
   const form = new formidable.IncomingForm({
@@ -59,7 +59,8 @@ exports.create = (req,res) => {
    blog.slug = slugify(title, {lower : true});
    blog.metaTitle = `${title} | ${process.env.APP_NAME}`; 
    blog.metaDescription = stripHtml(body.substring(0, 160)).result; //first 160 characters
-   blog.postedBy = req.auth._id //made available by a middleware in the route - require_sign_in
+   blog.postedBy = req.auth._id; //made available by a middleware in the route - require_sign_in
+   blog.excerpt = smartTrim(body, 320, ' ', ' ...');
 
    //handle categories and tags
    arrayOfCategories = categories.split(',');
