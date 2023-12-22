@@ -8,18 +8,21 @@ import { getCookie, getLocalStorageUser } from "@/actions/auth" //for getting to
 import { getAllCategories } from "@/actions/category"
 import { getAllTags } from "@/actions/tag"
 import { createBlog } from "@/actions/blog"
+import { quillFormats, quillModules } from "@/helpers/quill"
 
 const ReactQuill = dynamic(() => import('react-quill', {ssr : false}))
 import '@/node_modules/react-quill/dist/quill.snow.css';
 
 const BlogCreate = () => {
     const router = useRouter();
+    let blogFromLocalFlag = false; //Added by me as a flag (used with useEffect) to avoid the problem where the form is empty even though the in-process blog appears to be loaded from local storage
     const blogFromLocalStorage = () => {
         if (typeof window === 'undefined' || !localStorage.getItem('blog')) {
             return '';
         }
         const localBlog = localStorage.getItem('blog');
         if (localBlog) {
+            blogFromLocalFlag = true;
             return localBlog
         } 
     }
@@ -29,7 +32,6 @@ const BlogCreate = () => {
     const [uploaded, setUploaded] = useState('');
     const [chosenCategories, setChosenCategories] = useState([]);
     const [chosenTags, setChosenTags] = useState([])
-    const [body, setBody] = useState(blogFromLocalStorage());
     const [values, setValues] = useState({
         error: '',
         sizeError: '', //limit the blog size to 2mb
@@ -38,7 +40,7 @@ const BlogCreate = () => {
         title: '',
         hidePublishButton : false //disable on pressing publish
     })
-
+    const [body, setBody] = useState(blogFromLocalStorage());
     const {error, sizeError, success, formData, title, hidePublishButton} = values;
 
     const initCategories = () => {
@@ -69,9 +71,28 @@ const BlogCreate = () => {
         initTags();
     }, [router])
 
+    useEffect(() => { //added by me so that formData can be set once the blog is loaded from local storage
+        if (blogFromLocalFlag) {
+            formData.set('body', body)
+        }
+    }, [blogFromLocalFlag])
+
     const publishBlog = (e) => {
         e.preventDefault();
-        console.log('testing publish');
+        const token = getCookie('token');
+        createBlog(formData, token)
+        .then((data) => {
+            if (data.error) {
+                setValues({...values, error: data.error});
+            } else {
+                setValues({...values, formData: new FormData(), title : '', error : '', success : `A new blog titled "${data.title}" is created`});
+                setBody(''); //will also trigger OnChange and clear out local storage
+                setChosenCategories([]);
+                setChosenTags([]);
+                setUploaded('');
+                document.querySelectorAll('input[type=checkbox]').forEach( el => el.checked = false );
+            }
+        })
     }
 
     const handleChange = (type) => (e) => { 
@@ -83,7 +104,7 @@ const BlogCreate = () => {
             input = e.target.value;
         }
         formData.set(type, input);
-        setValues({...values, [type] : input, formData, error : ''})
+        setValues({...values, [type] : input, error : '', success : ''})
     }
 
     const handleBody = (e) => {
@@ -115,7 +136,7 @@ const BlogCreate = () => {
             copyTag.splice(tagIndex, 1)
         }
         setChosenTags(copyTag);
-        formData.set('Tags', copyTag);
+        formData.set('tags', copyTag);
     };
 
 
@@ -145,6 +166,23 @@ const BlogCreate = () => {
         )
     }
 
+    const showError = () => {
+        return (
+            <div className="alert alert-danger" 
+            style={{display : error ? '' : 'none'}}> {/*will not be displayed if there is no error*/}
+                {error}
+            </div>
+        )
+    }
+
+    const showSuccess = () => {
+        return(
+            <div className="alert alert-success" 
+            style={{display : success ? '' : 'none'}}> {/*will not be displayed if there is no error*/}
+                {success}
+            </div>
+        )
+    }
 
     const createBlogForm = () => {
         return (
@@ -156,7 +194,12 @@ const BlogCreate = () => {
                     <input type="text" className="form-control" value={title} onChange={handleChange('title')}/>
                 </div>
                 <div className="form-group">
-                    <ReactQuill modules={BlogCreate.modules} formats={BlogCreate.formats} value={body} placeholder="Key in the contents of your blog here" onChange={handleBody}/>
+                    <ReactQuill modules={quillModules} 
+                    formats={quillFormats} 
+                    value={body} 
+                    placeholder="Key in the contents of your blog here" 
+                    onChange={handleBody}
+                    />
                 </div>
                 <div>
                     <button type="submit" className="btn btn-primary mt-2">
@@ -170,6 +213,8 @@ const BlogCreate = () => {
         <div className="container-fluid">
             <div className="row">
                 <div className='col-md-8'>
+                    {showError()}
+                    {showSuccess()}
                     {createBlogForm()}
                 </div>
                 <div className="col-md-4">
@@ -209,33 +254,5 @@ const BlogCreate = () => {
     )
 }
 
-BlogCreate.modules = {
-    toolbar: [
-        [{ header: '1' }, { header: '2' }, { header: [3, 4, 5, 6] }, { font: [] }],
-        [{ size: [] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link', 'image', 'video'],
-        ['clean'],
-        ['code-block']
-    ]
-};
- 
-BlogCreate.formats = [
-    'header',
-    'font',
-    'size',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'link',
-    'image',
-    'video',
-    'code-block'
-];
 
 export default BlogCreate;

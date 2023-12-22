@@ -104,3 +104,176 @@ exports.create = (req,res) => {
    })
   })
 };
+
+exports.list = (req, res) => {
+    Blog.find({}) //find all
+    .populate('categories', '_id name slug')
+    .populate('tags', '_id name slug')
+    .populate('postedBy', '_id name username profile')
+    .select('_id title slug excerpt categories tags postedBy createdAt updatedAt') //pictures and body should be handled separately
+    .exec()
+    .then((data) => {
+        return res.json(data);
+    })
+    .catch((err) => {
+        return res.status(400).json({
+            error : generateDBErrorMsg(err)
+        });
+    });
+}
+
+exports.listBlogCatTag = (req, res) => {
+    const limit = req.body.limit ? parseInt(req.body.limit) : 10 //number of posts/categories/tags to be loaded in one go
+    const skip = req.body.skip ? parseInt(req.body.skip) : 0 //how many to skip i.e. already loaded
+    let blogs;
+    let categories;
+    let tags;
+    const blogPromise = Blog.find({})
+    .populate('categories', '_id name slug')
+    .populate('tags', '_id name slug')
+    .populate('postedBy', '_id name username profile')
+    .sort({createdAt: -1}) //newest first
+    .skip(skip)
+    .limit(limit)
+    .select('_id title slug excerpt categories tags postedBy createdAt updatedAt') //pictures and body should be handled separately
+    .exec()
+    .then((data) => {
+        blogs = data;
+    })
+    .catch((err) => {
+        res.status(400).json({
+            error : generateDBErrorMsg(err)
+        })
+    })
+    const catPromise = 
+        Category.find({})
+        .exec()
+        .then((data) => {
+            categories = data;
+        })
+        .catch((err) => {
+            res.status(400).json({
+                error : generateDBErrorMsg(err)
+            })
+        })
+    const tagPromise =
+        Tag.find({})
+        .exec()
+        .then((data) => {
+            tags = data;
+        })
+        .catch((err) => {
+            res.status(400).json({
+                error : generateDBErrorMsg(err)
+            })
+        })
+    promiseArray = [blogPromise, catPromise, tagPromise]
+    Promise.all(promiseArray).then(() => {
+        res.json({blogs, categories, tags, size : blogs.length})
+    })
+}
+
+exports.read = (req, res) => {
+    const slug = req.params.slug.toLowerCase();
+    Blog.findOne({slug})
+    .populate('categories', '_id name slug')
+    .populate('tags', '_id name slug')
+    .populate('postedBy', '_id name username profile')
+    .select('_id title body slug metaTitle metaDescription categories tags postedBy createdAt updatedAt') //pictures should be handled separately
+    .exec()
+    .then((data) => {
+        res.json(data)
+    })
+    .catch((err) => {
+        res.status(400).json({
+            error : generateDBErrorMsg(err)
+        })
+    })
+}
+
+exports.remove = (req, res) => {
+    const slug = req.params.slug.toLowerCase();
+    Blog.findOneAndDelete({slug})
+    .exec()
+    .then((data) => {
+        res.json({
+            message : `Blog with title ${data.title} deleted successfully`
+        })
+    })
+    .catch((err) => {
+        res.status(400).json({
+            error : generateDBErrorMsg(err)
+        })
+    })
+}
+
+exports.update = (req, res) => {
+    const slug = req.params.slug.toLowerCase();
+    Blog.findOne({slug})
+    .exec()
+    .then((oldBlog) => {
+        const form = new formidable.IncomingForm({
+            keepExtensions : true
+          });
+          form.parse(req, (err, fields, files) => {
+            if (err) {
+                logger.info("formidable form.parse failed: " + err.message);
+                return res.status(400).json({
+                    error : "formidable form.parse failed"
+                })
+            };
+
+           const {body, categories, tags} = firstValues(form, fields, []);
+                      
+           //handle merge
+           const slugBeforeMerge = oldBlog.slug
+           oldBlog.slug = slugBeforeMerge; //slug should not change for SEO purpose
+           
+           //set new values in fields
+            if (body) {
+                fields.excerpt = smartTrim(body, 320, ' ', ' ...');
+                fields.metaDescription = stripHtml(body.substring(0, 160));                
+            };
+
+            if (categories) { //categories and tags need special treatment because they are ararys, whereas the field is just a string
+                fields.categories = categories.split(',');
+            }
+
+            if (tags) {
+                fields.tags = tags.split(',');
+            }
+
+            //merge
+            oldBlog = _.merge(oldBlog, fields);
+            //technically there should be some validation that if new fields are inserted, they still satisfy the old requirements
+        
+           //handle photo/files
+           const { photo } = firstValues(form, files, []);
+           if (photo) {
+            if (photo.size > 10000000) { //validation to make sure photo less than 1 mb
+                return res.status(400).json({
+                    error : 'Image should be less than 1 mb in size'
+                });    
+            }
+            oldBlog.photo.data = fs.readFileSync(photo.filepath) //fs is from Node.JS
+            oldBlog.photo.contentType = photo.mimetype;
+           }
+        
+           oldBlog.save()
+           .then((data) => {
+                res.json(data)
+           })
+           .catch((err) => {
+                logger.warn(err.message);
+                res.status(400).json({
+                    error : generateDBErrorMsg(err)
+                });
+           })
+          })
+    })
+    .catch((err) => {
+        res.status(400).json({
+            error : generateDBErrorMsg(err)
+        })
+    })
+}

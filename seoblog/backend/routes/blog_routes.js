@@ -7,5 +7,19 @@ router.post('/blog/create',
     authControllers.require_sign_in,
     authControllers.adminMiddleware,
     blogControllers.create);
+router.get('/blog/list',
+    blogControllers.list);
+router.post('/blog/listBlogCatTag',
+    blogControllers.listBlogCatTag);
+router.get('/blog/:slug', 
+    blogControllers.read);
+router.delete('/blog/:slug',
+    authControllers.require_sign_in,
+    authControllers.adminMiddleware,
+    blogControllers.remove);
+router.put('/blog/:slug',
+    authControllers.require_sign_in,
+    authControllers.adminMiddleware,
+    blogControllers.update);
 
 module.exports = router;

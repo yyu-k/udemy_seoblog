@@ -10,6 +10,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 5. When error is caught, the e.message should be returned instead of the Error object. More generally changes were made to error handling to simplify the processing of the error message / display more details to the front end
 6. Amended require_sign_in so that absence of authorization token will be caught and the user will receive a 401 with a JSON (instead of the whole error object)
 7. Amended the changes to input type=file (which is hidden) so that the uploaded file's name continues to be displayed.
+8. Avoiding nested then(), instead preferring to check if multiple promises are resolved
 
 <h3>Out of date things that needed to be changed</h3>
 
@@ -24,6 +25,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 
 1. Query.prototype.exec() no longer accepts a callback
 2. Model.prototype.save() no longer accepts a callback
+3. When merging earlier mongoose documents with newer updates sent via formidable.Fields, the _.merge(doc, fields) step should happen AFTER necessary changes are made on the FIELDS object e.g. splitting up a string of categories into an array. Otherwise, there will be errors such as CastError: Cast to ObjectId failed for value "657d41ba286c0e0633253c36,658412b168d0b80ebe8a5b63" (type string) at path "tags" because of "BSONError".
 
 <h5>Random extensions<h5>
 1. Slugify: toLowerCase is now an option ({lower : true})
