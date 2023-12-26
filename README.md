@@ -4,8 +4,6 @@ The course can be accessed on https://www.udemy.com/course/react-node-nextjs-ful
 The course's repository is on https://github.com/PacktPublishing/React-Node-FullStack---Multi-User-Blogging-Platform-with-SEO-1
 
 1. Changed password hashing/salting to bcrypt (instead of built-in crypto)
-2. Using the winston module for logging instead of console.log
-3. Moved some constants to a general CONSTANTS.js file in root
 4. Changed shortid to nanoid
 5. When error is caught, the e.message should be returned instead of the Error object. More generally changes were made to error handling to simplify the processing of the error message / display more details to the front end
 6. Amended require_sign_in so that absence of authorization token will be caught and the user will receive a 401 with a JSON (instead of the whole error object)
@@ -16,7 +14,6 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 
 <h5>General<h5>
 1. Replaced process.browser with typeof window === 'object'.
-2. express-jwt: The decoded JWT payload is now available as req.auth rather than req.user
 3. Replaced nProgress with next-nprogress-bar for compatibility with app router
 4. zeit/next-css is no longer necessary due to improved CSS support in next
 5. JSON.stringify and JSON.parse are not necessary for various parts involving saving to local storage
@@ -25,10 +22,11 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 
 1. Query.prototype.exec() no longer accepts a callback
 2. Model.prototype.save() no longer accepts a callback
-3. When merging earlier mongoose documents with newer updates sent via formidable.Fields, the _.merge(doc, fields) step should happen AFTER necessary changes are made on the FIELDS object e.g. splitting up a string of categories into an array. Otherwise, there will be errors such as CastError: Cast to ObjectId failed for value "657d41ba286c0e0633253c36,658412b168d0b80ebe8a5b63" (type string) at path "tags" because of "BSONError".
+3. When merging earlier mongoose documents with newer updates sent via formidable.Fields, the _.merge(doc, fields) step should happen AFTER necessary changes are made on the FIELDS object e.g. splitting up a string of categories into an array. Otherwise, there will be errors such as CastError: Cast to ObjectId failed for value "657d41ba286c0e0633253c36,658412b168d0b80ebe8a5b63" (type string) at path "tags" because of "BSONError". This issue arises quite frequently because all of the fields are stored as an array which need to be extracted using firstValues or otherwise. 
 
 <h5>Random extensions<h5>
 1. Slugify: toLowerCase is now an option ({lower : true})
+2. express-jwt: The decoded JWT payload is now available as req.auth rather than req.user
 
 <h5>Formidable<h5>
 1. Formidable: Method of creation/altering options slightly changed

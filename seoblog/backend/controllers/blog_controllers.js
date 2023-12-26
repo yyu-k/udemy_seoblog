@@ -176,6 +176,7 @@ exports.listBlogCatTag = (req, res) => {
 exports.read = (req, res) => {
     const slug = req.params.slug.toLowerCase();
     Blog.findOne({slug})
+    .select('-photo') //exclude the photo field when reading
     .populate('categories', '_id name slug')
     .populate('tags', '_id name slug')
     .populate('postedBy', '_id name username profile')
@@ -186,6 +187,28 @@ exports.read = (req, res) => {
     })
     .catch((err) => {
         res.status(400).json({
+            error : generateDBErrorMsg(err)
+        })
+    })
+}
+
+exports.getPhoto = (req, res) => {
+    const slug = req.params.slug.toLowerCase();
+    Blog.findOne({slug})
+    .select('photo')
+    .exec()
+    .then((blog) => {
+        if (!blog) {
+            return res.status(400).json({
+                error : `No relevant photo found for the slug "${slug}"`
+            })
+        } else {
+            res.set('Content-Type', blog.photo.contentType);
+            return res.send(blog.photo.data)
+        }
+    })
+    .catch((err) => {
+        return res.status(400).json({
             error : generateDBErrorMsg(err)
         })
     })
@@ -223,11 +246,10 @@ exports.update = (req, res) => {
                 })
             };
 
-           const {body, categories, tags} = firstValues(form, fields, []);
+           const {body, categories, tags, title} = firstValues(form, fields, []);
                       
            //handle merge
-           const slugBeforeMerge = oldBlog.slug
-           oldBlog.slug = slugBeforeMerge; //slug should not change for SEO purpose
+           //Note that slug should not change for SEO purpose
            
            //set new values in fields
             if (body) {
@@ -241,6 +263,10 @@ exports.update = (req, res) => {
 
             if (tags) {
                 fields.tags = tags.split(',');
+            }
+
+            if (title) {
+                fields.title = title;
             }
 
             //merge
@@ -261,7 +287,7 @@ exports.update = (req, res) => {
         
            oldBlog.save()
            .then((data) => {
-                res.json(data)
+                res.json(data);
            })
            .catch((err) => {
                 logger.warn(err.message);

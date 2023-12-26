@@ -13,6 +13,8 @@ router.post('/blog/listBlogCatTag',
     blogControllers.listBlogCatTag);
 router.get('/blog/:slug', 
     blogControllers.read);
+router.get('/blog/photo/:slug',
+    blogControllers.getPhoto)
 router.delete('/blog/:slug',
     authControllers.require_sign_in,
     authControllers.adminMiddleware,
