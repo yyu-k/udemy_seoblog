@@ -102,6 +102,11 @@ const Header = () => {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ms-auto" navbar>
+            <NavItem>
+              <NavLink href="/blogs">
+                Blogs
+              </NavLink>
+            </NavItem>
             <ShowSignInSignUp bool={!user}/>
             <ShowSignOut bool={user}/>
             <NavItem>

@@ -137,40 +137,30 @@ exports.listBlogCatTag = (req, res) => {
     .limit(limit)
     .select('_id title slug excerpt categories tags postedBy createdAt updatedAt') //pictures and body should be handled separately
     .exec()
-    .then((data) => {
-        blogs = data;
-    })
-    .catch((err) => {
-        res.status(400).json({
-            error : generateDBErrorMsg(err)
-        })
-    })
+
     const catPromise = 
         Category.find({})
         .exec()
-        .then((data) => {
-            categories = data;
-        })
-        .catch((err) => {
-            res.status(400).json({
-                error : generateDBErrorMsg(err)
-            })
-        })
+
     const tagPromise =
         Tag.find({})
         .exec()
-        .then((data) => {
-            tags = data;
-        })
-        .catch((err) => {
-            res.status(400).json({
-                error : generateDBErrorMsg(err)
+
+    promiseArray = [blogPromise, catPromise, tagPromise]
+    Promise.all(promiseArray)
+        .then((dataArray) => {
+            res.json({
+                blogs : dataArray[0], 
+                categories : dataArray[1], 
+                tags : dataArray[2], 
+                size : dataArray[0].length
             })
         })
-    promiseArray = [blogPromise, catPromise, tagPromise]
-    Promise.all(promiseArray).then(() => {
-        res.json({blogs, categories, tags, size : blogs.length})
-    })
+        .catch((error) => {
+            res.status(400).json({
+                error : error.message
+            })
+        })
 }
 
 exports.read = (req, res) => {

@@ -17,6 +17,9 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 3. Replaced nProgress with next-nprogress-bar for compatibility with app router
 4. zeit/next-css is no longer necessary due to improved CSS support in next
 5. JSON.stringify and JSON.parse are not necessary for various parts involving saving to local storage
+6. isomorphic-fetch should no longer be necessary - fetch provided in node
+7. async/await now supported in server components, but not client components (generally used async/await to mess around, didn't think too hard about whether it is appropriate)
+8. react-render-html is outdated, replaced with directly using dangerouslySetInnerHTML in the Blog component. Some kind of sanitiser is needed for this reason - not thinking very hard about this
 
 <h5>Mongoose<h5>
 
@@ -46,7 +49,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 9. withRouter does not work with the app router. Various workarounds. 
 
 <h5>CSS/Bootstrap</h5>
-1. Margins: ml/mr has been replaced with ms (start) and me (end). See https://stackoverflow.com/questions/69301335/bootstrap-padding-left-and-right-is-not-working
+1. Margins: ml/mr has been replaced with ms (start) and me (end). See https://stackoverflow.com/questions/69301335/bootstrap-padding-left-and-right-is-not-working. More generally various class name changes e.g. font-weight to fw
 
 Notes:
 1. next 14.0.1 doesn't seem to work in Windows - run this in Linux or use WSL2 (actually the problem seems to be that the directory name cannot contain the words "ude" in Windows for some reason) 
