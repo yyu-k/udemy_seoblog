@@ -9,10 +9,12 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 6. Amended require_sign_in so that absence of authorization token will be caught and the user will receive a 401 with a JSON (instead of the whole error object)
 7. Amended the changes to input type=file (which is hidden) so that the uploaded file's name continues to be displayed.
 8. Avoiding nested then(), instead preferring to check if multiple promises are resolved
+9. React documentation provides that "You might be tempted to use an item’s index in the array as its key. In fact, that’s what React will use if you don’t specify a key at all. But the order in which you render items will change over time if an item is inserted, deleted, or if the array gets reordered. Index as a key often leads to subtle and confusing bugs." - this advice did not seem to be heeded by the course author. Index occasionally changed (e.g. to the _id provided by mongodb) for this reason but this was not consistently done. 
 
 <h3>Out of date things that needed to be changed</h3>
 
 <h5>General<h5>
+
 1. Replaced process.browser with typeof window === 'object'.
 3. Replaced nProgress with next-nprogress-bar for compatibility with app router
 4. zeit/next-css is no longer necessary due to improved CSS support in next
@@ -47,6 +49,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 7. The previous way of dynamically rendering the navigation bar to reflect login status was to use a function to pull values from localStorage, and render the bar depending on whether the function returned a "truthy" value e.g. {localStorageFunction() && showSignIn()}. This did not work - there are hydration issues, and after those are resolved, the navigation bar would only re-render with a refresh. The solution was to trigger an event via window.dispatchEvent on login/logout, then use window.addEventListener on the useEffect function. See https://stackoverflow.com/questions/56660153/how-to-listen-to-localstorage-value-changes-in-react. Note that alternatives such as https://stackoverflow.com/questions/61178240/useeffect-does-not-listen-for-localstorage, by themselves, do not work. 
 8. On some pages with redirection, e.g. on the sign up page, to avoid flashing before redirection by using a "loading" state coupled with UseEffect. See e.g. https://stackoverflow.com/questions/75786885/preventing-flashing-of-page-when-redirecting. Not done on all for learning purpose.
 9. withRouter does not work with the app router. Various workarounds. 
+10. Modification of head tag no longer done with next/head, but using the Metadata API. See https://nextjs.org/docs/app/building-your-application/optimizing/metadata, and also https://stronglytyped.uk/articles/open-graph-images-nextjs-app-router.
 
 <h5>CSS/Bootstrap</h5>
 1. Margins: ml/mr has been replaced with ms (start) and me (end). See https://stackoverflow.com/questions/69301335/bootstrap-padding-left-and-right-is-not-working. More generally various class name changes e.g. font-weight to fw
@@ -58,3 +61,4 @@ Notes:
 4. Arguments for the navbar in reactstrap needs to be keyed in manually (e.g. expand={'md'}), otherwise the default values will hold and the navbar will not change its formatting regardless of screensize etc.
 5. admin password is adminpassword
 6. The problem with using the url as parameters for the purpose of API calls is that one has to be sure the parameters are always in English - an api call to e.g. /tag/delete/日本語 probably wouldn't work well
+
