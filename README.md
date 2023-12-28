@@ -50,6 +50,8 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 8. On some pages with redirection, e.g. on the sign up page, to avoid flashing before redirection by using a "loading" state coupled with UseEffect. See e.g. https://stackoverflow.com/questions/75786885/preventing-flashing-of-page-when-redirecting. Not done on all for learning purpose.
 9. withRouter does not work with the app router. Various workarounds. 
 10. Modification of head tag no longer done with next/head, but using the Metadata API. See https://nextjs.org/docs/app/building-your-application/optimizing/metadata, and also https://stronglytyped.uk/articles/open-graph-images-nextjs-app-router.
+11. getIntitialProps etc no longer used in the app router - just fetch directly. See e.g. https://stackoverflow.com/questions/76267351/how-to-fetch-data-server-side-in-the-latest-next-js-tried-getstaticprops-but-it
+
 
 <h5>CSS/Bootstrap</h5>
 1. Margins: ml/mr has been replaced with ms (start) and me (end). See https://stackoverflow.com/questions/69301335/bootstrap-padding-left-and-right-is-not-working. More generally various class name changes e.g. font-weight to fw

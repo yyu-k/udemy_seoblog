@@ -1,12 +1,13 @@
-import Blog from "@/components/Blog/Blog"
+import Blogs from "@/components/Blog/Blog"
 import { listBlogCatTag } from "@/actions/blog"
 import { API, DOMAIN, APP_NAME } from "@/config";
 import { findCurrentPath } from "@/helpers/findCurrentPath";
+import { BLOG_LOAD_LIMIT } from "@/config";
 
 export const metadata = {
+  metadataBase: new URL(`${DOMAIN}/${findCurrentPath()}`),
   title: `MERN Blog App Tutorial | ${APP_NAME}`,
   description: 'List of blogs',
-  metadataBase: new URL(`${DOMAIN}/${findCurrentPath()}`),
   alternates: {
     canonical: '/'
   }, 
@@ -22,7 +23,7 @@ export const metadata = {
 export default async function Page() {
     return (
       <>
-        <Blog initialProps={await listBlogCatTag()}/>
+        <Blogs initialProps={await listBlogCatTag(0, BLOG_LOAD_LIMIT)}/>
       </>
     )
   }

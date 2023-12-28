@@ -125,9 +125,6 @@ exports.list = (req, res) => {
 exports.listBlogCatTag = (req, res) => {
     const limit = req.body.limit ? parseInt(req.body.limit) : 10 //number of posts/categories/tags to be loaded in one go
     const skip = req.body.skip ? parseInt(req.body.skip) : 0 //how many to skip i.e. already loaded
-    let blogs;
-    let categories;
-    let tags;
     const blogPromise = Blog.find({})
     .populate('categories', '_id name slug')
     .populate('tags', '_id name slug')
