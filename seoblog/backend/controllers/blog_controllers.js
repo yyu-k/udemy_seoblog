@@ -187,7 +187,7 @@ exports.getPhoto = (req, res) => {
     .then((blog) => {
         if (!blog) {
             return res.status(400).json({
-                error : `No relevant photo found for the slug "${slug}"`
+                error : `No relevant blog found for the slug "${slug}"`
             })
         } else {
             res.set('Content-Type', blog.photo.contentType);
@@ -287,6 +287,24 @@ exports.update = (req, res) => {
     .catch((err) => {
         res.status(400).json({
             error : generateDBErrorMsg(err)
+        })
+    })
+}
+
+exports.listRelated = (req, res) => {
+    const limit = req.body.limit ? parseInt(req.body.limit) : 3;
+    const {_id, categories} = req.body.blog;
+    Blog.find({ _id: {$ne: _id}, categories: {$in: categories}})
+    .limit(limit)
+    .populate('postedBy', '_id name profile')
+    .select('title slug excerpt postedBy createdAt updatedAt')
+    .exec()
+    .then((blogs) => {
+        res.json(blogs)
+    })
+    .catch((err) => {
+        res.status(400).json({
+            error : err.message
         })
     })
 }

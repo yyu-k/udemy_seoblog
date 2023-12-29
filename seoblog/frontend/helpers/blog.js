@@ -1,4 +1,5 @@
 import Link from "next/link"
+import SmallCard from "@/components/Blog/SmallCard"
 
 export const showCategories = (blog) => {
     return (
@@ -26,4 +27,19 @@ export const showTags = (blog) => {
             )
         })
     )
+}
+
+export const showRelatedBlogs = (related) => {
+    if(!related) {
+        return;
+    }
+    return related.map((blog) => {
+        return (
+            <div key={blog._id} className="col-md-4">
+                <article>
+                    <SmallCard blog={blog}/>
+                </article>
+            </div>
+        )
+    })
 }

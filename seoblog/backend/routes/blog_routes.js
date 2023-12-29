@@ -23,5 +23,7 @@ router.put('/blog/:slug',
     authControllers.require_sign_in,
     authControllers.adminMiddleware,
     blogControllers.update);
+router.post('/blog/related',
+    blogControllers.listRelated)
 
 module.exports = router;

@@ -5,7 +5,7 @@ import { findCurrentPath } from "@/helpers/findCurrentPath";
 import { BLOG_LOAD_LIMIT } from "@/config";
 
 export const metadata = {
-  metadataBase: new URL(`${DOMAIN}/${findCurrentPath()}`),
+  metadataBase: new URL(DOMAIN),
   title: `MERN Blog App Tutorial | ${APP_NAME}`,
   description: 'List of blogs',
   alternates: {
@@ -14,7 +14,7 @@ export const metadata = {
   openGraph:  {
     title: `Latest blogs | ${APP_NAME}`,
     description: 'Blogs generated as part of a MERN tutorial',
-    url: `${DOMAIN}/${findCurrentPath()}`,
+    url: `/${findCurrentPath()}`,
     siteName: APP_NAME,
     type:'website'
   }

@@ -21,8 +21,9 @@ export async function generateMetadata({ params,}, parent) {
     })
 
   return {
-    metadataBase: new URL(`${DOMAIN}/blogs/${blog.slug}`),
+    //metadataBase: new URL(`${DOMAIN}/blogs/${blog.slug}`),
     title: `${blog.title} | ${APP_NAME}`,
+    metadataBase: new URL(DOMAIN),
     description: blog.metaDescription,
     alternates: {
       canonical: '/'
@@ -30,7 +31,7 @@ export async function generateMetadata({ params,}, parent) {
     openGraph: {
       title:  `${blog.title} | ${APP_NAME}`,
       description: blog.metaDescription,
-      url: `${DOMAIN}/blogs/${blog.slug}`,
+      url: `/blogs/${blog.slug}`,
       siteName: APP_NAME,
       images: [{
         url : `${API}/blog/photo/${blog.slug}`,

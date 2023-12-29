@@ -54,3 +54,22 @@ export const readSingleBlog = (slug) => {
         }
     })
 }
+
+export const listRelated = (blog, limit = 3) => {
+    //helper api call to list all the blogs, categories and tags 
+    return (
+        fetch(`${API}/blog/related`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body : JSON.stringify(blog)
+        }).then(response => {
+            return response.json();
+        })
+        .catch(err => {
+            return {error : err.message} //modified to return an object, or else there will be a complain that data is undefined when there is an error
+        })
+    );
+}

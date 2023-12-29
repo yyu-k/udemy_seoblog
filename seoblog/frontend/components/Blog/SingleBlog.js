@@ -1,9 +1,25 @@
+'use client'
+
 import { API, DOMAIN, APP_NAME } from "@/config"
 import '@/css/styles.css' //modifies the featured-image class
 import moment from "moment"
-import { showCategories, showTags } from "@/helpers/blog"
+import { showCategories, showTags, showRelatedBlogs } from "@/helpers/blog"
+import { useState, useEffect } from "react"
+import { listRelated } from "@/actions/blog"
 
 export const SingleBlog = ({blog}) => {
+    const [related, setRelated] = useState();
+    const loadRelated = () => {
+        listRelated({'blog' : blog})
+        .then((data) => {
+            if (data.error) {
+                console.log(data.error)
+            }
+            setRelated(data);
+        })
+    }
+    useEffect(loadRelated,[]);
+
     if (blog.error) {
         return (
             <>
@@ -19,7 +35,7 @@ export const SingleBlog = ({blog}) => {
             <div className="container-fluid">
                 <section>
                     <div className="row" style={{marginTop:'-10px'}}>
-                        <img src={`${API}/blog/photo/${blog.slug}`} 
+                        <img src={`${API}/blog/photo/${blog.slug}`}
                             alt={blog.title}
                             className="img img-fluid featured-image"
                         />
@@ -47,8 +63,12 @@ export const SingleBlog = ({blog}) => {
             </div>
             <div className="container pb-5">
                 <h4 className="text-center pt-5 pb-5 h2">
-                    Related blogs
+                    Related Blogs
                 </h4>
+                <hr/>
+                <div className="row">
+                    {showRelatedBlogs(related)}
+                </div>
             </div>
             <div className="container pb-5">
                 Show Comments

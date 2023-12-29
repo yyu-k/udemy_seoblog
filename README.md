@@ -10,6 +10,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 7. Amended the changes to input type=file (which is hidden) so that the uploaded file's name continues to be displayed.
 8. Avoiding nested then(), instead preferring to check if multiple promises are resolved
 9. React documentation provides that "You might be tempted to use an item’s index in the array as its key. In fact, that’s what React will use if you don’t specify a key at all. But the order in which you render items will change over time if an item is inserted, deleted, or if the array gets reordered. Index as a key often leads to subtle and confusing bugs." - this advice did not seem to be heeded by the course author. Index occasionally changed (e.g. to the _id provided by mongodb) for this reason but this was not consistently done. 
+10. Added ImageOrNone component to display a NO IMAGE image where there is none to display for experimentation purpose
 
 <h3>Out of date things that needed to be changed</h3>
 
