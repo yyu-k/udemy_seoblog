@@ -21,6 +21,11 @@ export default function Page() {
                   Create Blog
                 </Link>
               </li>
+              <li className="list-group-item">
+                <Link href="/admin/crud/blog-edit">
+                  Update/Delete Blogs
+                </Link>
+              </li>
             </ul>
           </div>
           <div className="col-md-8">

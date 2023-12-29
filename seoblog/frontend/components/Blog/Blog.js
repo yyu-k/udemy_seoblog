@@ -54,7 +54,7 @@ const Blogs = ({initialProps}) => {
     const showAllTags = () => {
         return tags.map((t, i) => {
             return (
-                <Link className="btn btn-outline-primary me-1 ms-1 mt-3"
+                <Link className="btn btn-primary me-1 ms-1 mt-3"
                     key={t._id} 
                     href={`/categories/${t.slug}`}>
                     {t.name}
