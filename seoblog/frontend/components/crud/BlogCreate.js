@@ -10,11 +10,10 @@ import { getAllTags } from "@/actions/tag"
 import { createBlog } from "@/actions/blog"
 import { quillFormats, quillModules } from "@/helpers/quill"
 
-const ReactQuill = dynamic(() => import('react-quill', {ssr : false}))
+const ReactQuill = dynamic(() => import('react-quill'), {ssr : false})
 import '@/node_modules/react-quill/dist/quill.snow.css';
 
 const BlogCreate = () => {
-    const router = useRouter();
     let blogFromLocalFlag = false; //Added by me as a flag (used with useEffect) to avoid the problem where the form is empty even though the in-process blog appears to be loaded from local storage
     const blogFromLocalStorage = () => {
         if (typeof window === 'undefined' || !localStorage.getItem('blog')) {
@@ -34,7 +33,7 @@ const BlogCreate = () => {
     const [chosenTags, setChosenTags] = useState([])
     const [values, setValues] = useState({
         error: '',
-        sizeError: '', //limit the blog size to 2mb
+        sizeError: '', //limit the blog size to 2mb - unused?
         success: '',
         formData: new FormData(),
         title: '',
@@ -69,7 +68,7 @@ const BlogCreate = () => {
         //setValues({...values, formData : new FormData()}) //Not sure why this needs to be a useEffect? Amended. 
         initCategories();
         initTags();
-    }, [router])
+    }, []) //supposed to add router as a dependency but I think not needed
 
     useEffect(() => { //added by me so that formData can be set once the blog is loaded from local storage
         if (blogFromLocalFlag) {
@@ -142,9 +141,9 @@ const BlogCreate = () => {
 
     const showCategories = () => {
         return (
-            categories.map((v, i) => {
+            categories.map((v) => {
                 return (
-                    <li key={i} className="list-unstyled">
+                    <li key={v._id} className="list-unstyled">
                         <input type="checkbox" className="me-2" onChange={handleCategoryToggle(v._id)}/>
                         <label className='form-check-label'>{v.name}</label>
                     </li>
@@ -155,9 +154,9 @@ const BlogCreate = () => {
 
     const showTags = () => {
         return (
-            tags.map((v, i) => {
+            tags.map((v) => {
                 return (
-                    <li key={i} className="list-unstyled">
+                    <li key={v._id} className="list-unstyled">
                         <input type="checkbox" className="me-2" onChange={handleTagToggle(v._id)}/>
                         <label className='form-check-label'>{v.name}</label>
                     </li>

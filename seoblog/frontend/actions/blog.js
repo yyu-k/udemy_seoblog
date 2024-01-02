@@ -75,14 +75,13 @@ export const listRelated = (blog, limit = 3) => {
 }
 
 export const listBlogs = () => {
-    return fetch(`${API}/blog`, {
+    return fetch(`${API}/blog/list`, {
         method: 'GET'
     })
     .then((data) =>{
         return data.json();
     })
     .catch((err) => {
-        console.log(err);
         return {
             error : err.message
         }

@@ -11,6 +11,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 8. Avoiding nested then(), instead preferring to check if multiple promises are resolved
 9. React documentation provides that "You might be tempted to use an item’s index in the array as its key. In fact, that’s what React will use if you don’t specify a key at all. But the order in which you render items will change over time if an item is inserted, deleted, or if the array gets reordered. Index as a key often leads to subtle and confusing bugs." - this advice did not seem to be heeded by the course author. Index occasionally changed (e.g. to the _id provided by mongodb) for this reason but this was not consistently done. 
 10. Added ImageOrNone component to display a NO IMAGE image where there is none to display for experimentation purpose
+12. It is not apparent why FormData is included in an object initialised using useState when the FormData is not relevant to the rendering. Restructured in some places. See also https://react.dev/reference/react/useState#updating-objects-and-arrays-in-state  
 
 <h3>Out of date things that needed to be changed</h3>
 
@@ -23,6 +24,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 6. isomorphic-fetch should no longer be necessary - fetch provided in node
 7. async/await now supported in server components, but not client components (generally used async/await to mess around, didn't think too hard about whether it is appropriate)
 8. react-render-html is outdated, replaced with directly using dangerouslySetInnerHTML in the Blog component. Some kind of sanitiser is needed for this reason - not thinking very hard about this
+
 
 <h5>Mongoose<h5>
 
