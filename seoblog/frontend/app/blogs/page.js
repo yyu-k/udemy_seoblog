@@ -21,9 +21,10 @@ export const metadata = {
 }
 
 export default async function Page() {
+    const blogs = await listBlogCatTag(0, BLOG_LOAD_LIMIT);
     return (
       <>
-        <Blogs initialProps={await listBlogCatTag(0, BLOG_LOAD_LIMIT)}/>
+        <Blogs initialProps={blogs}/>
       </>
     )
   }

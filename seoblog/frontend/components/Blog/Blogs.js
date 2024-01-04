@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Card from "./Card";
 import { BLOG_LOAD_LIMIT } from "@/config";
 import { listBlogCatTag } from "@/actions/blog";
@@ -29,7 +29,7 @@ const Blogs = ({initialProps}) => {
         })
     }
 
-    const loadMoreButton = ()=> {
+    const loadMoreButton = () => {
         if (numBlogs >= limit) {
             return (
                 <button onClick={loadMore} className="btn btn-primary btn-lg">
@@ -79,7 +79,7 @@ const Blogs = ({initialProps}) => {
                 {initialProps.error}
             </div>
         )
-    }
+    } 
     return (
         <>
         <main>

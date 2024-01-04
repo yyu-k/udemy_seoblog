@@ -69,5 +69,6 @@ Notes:
 5. admin password is adminpassword
 6. The problem with using the url as parameters for the purpose of API calls is that one has to be sure the parameters are always in English - an api call to e.g. /tag/delete/日本語 probably wouldn't work well
 7. For some reason, if FormData is used directly (e.g. const formData = new FormData()) instead of being part of an object (const state = {..., formData : new FormData()}), values that are set will disappear and the backend will receive empty fields. 
+8. Putting a Link inside a section causes a hydration error. The hydration error appeared in the http://localhost:3000/blogs page, and removing the Card component made it clear that the Card component was the issue. Then the JSX was progressively removed and tested in the Card component to figure out what was causing the hydration error. 
 
 

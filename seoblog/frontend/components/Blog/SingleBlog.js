@@ -9,7 +9,6 @@ import { listRelated } from "@/actions/blog"
 import { useRouter } from "next/navigation"
 
 export const SingleBlog = ({blog}) => {
-    const router = useRouter();
     const [related, setRelated] = useState();
     const loadRelated = () => {
         listRelated({'blog' : blog})
@@ -22,7 +21,6 @@ export const SingleBlog = ({blog}) => {
     }
     useEffect(() => {
         loadRelated();
-        router.refresh();
     },[]);
 
     if (blog.error) {
