@@ -233,7 +233,7 @@ exports.update = (req, res) => {
                 })
             };
 
-           const {body, categories, tags, title} = firstValues(form, fields, []);
+           const {title, body, categories, tags} = firstValues(form, fields, []);
                       
            //handle merge
            //Note that slug should not change for SEO purpose
@@ -241,7 +241,8 @@ exports.update = (req, res) => {
            //set new values in fields
             if (body) {
                 fields.excerpt = smartTrim(body, 320, ' ', ' ...');
-                fields.metaDescription = stripHtml(body.substring(0, 160));                
+                fields.metaDescription = stripHtml(body.substring(0, 160)).result;
+                fields.body = body; //or else the body will remain in an array          
             };
 
             if (categories) { //categories and tags need special treatment because they are ararys, whereas the field is just a string
@@ -257,9 +258,9 @@ exports.update = (req, res) => {
             }
 
             //merge
-            oldBlog = _.merge(oldBlog, fields);
+            _.assign(oldBlog, fields);
             //technically there should be some validation that if new fields are inserted, they still satisfy the old requirements
-        
+
            //handle photo/files
            const { photo } = firstValues(form, files, []);
            if (photo) {
@@ -277,6 +278,7 @@ exports.update = (req, res) => {
                 res.json(data);
            })
            .catch((err) => {
+                console.log(err);
                 logger.warn(err.message);
                 res.status(400).json({
                     error : generateDBErrorMsg(err)

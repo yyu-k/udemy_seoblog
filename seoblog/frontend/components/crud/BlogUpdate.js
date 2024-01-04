@@ -10,19 +10,25 @@ import { getAllTags } from "@/actions/tag"
 import { createBlog } from "@/actions/blog"
 import { quillFormats, quillModules } from "@/helpers/quill"
 import { readSingleBlog, updateBlog } from "@/actions/blog"
+import { API } from "@/config"
+import { ImageOrNone } from "../ImageOrNone"
 
 const ReactQuill = dynamic(() => import('react-quill'), {ssr : false});
 import '@/node_modules/react-quill/dist/quill.snow.css';
 
 export const BlogUpdate = ({slug}) => {
+    const router = useRouter();
+    const token = getCookie('token');
     const [uploaded, setUploaded] = useState(''); 
     const [body, setBody] = useState('');
     const [state, setState] = useState({
         error : '',
         success : '',
-        title : ''
+        title : '',
+        formData : new FormData()
     });
-    const formData = new FormData();
+    const [isAdmin, setAdmin] = useState(false);
+    const {formData} = state;
 
     //categories and tags
     const [categories, setCategories] = useState([]);
@@ -134,6 +140,7 @@ export const BlogUpdate = ({slug}) => {
         .then((data) => {
             if (data.error) {
                 console.log(data.error);
+                setState({...state, error : data.error});
             } else {
                 setState({...state, title : data.title});
                 setBody(data.body);
@@ -143,6 +150,11 @@ export const BlogUpdate = ({slug}) => {
         });
         initCategories();
         initTags();
+        if (getLocalStorageUser().role === 1) {
+            setAdmin(true);
+        } else {
+            setAdmin(false);
+        }
     }, []) //supposed to add router as a dependency but I think not necessary
 
     const handleBody = (event) => {
@@ -159,11 +171,36 @@ export const BlogUpdate = ({slug}) => {
             input = e.target.value;
         }
         formData.set(type, input);
-        setState({...values, [type] : input, error : '', success : ''})
+        setState({...state, [type] : input, error : '', success : ''})
     }
 
-    const editBlog = () => { //update backend
-        console.log('update blog');
+    const editBlog = (event) => { //update backend
+        event.preventDefault();
+        updateBlog(formData, token, slug)
+        .then((data) => {
+            if (data.error) {
+                setState({...state, error : data.error});
+            } else {
+                setState({...state, error: '', success: `Blog titled "${data.title}" has been updated`});
+            }
+        })
+
+    }
+
+    const showError = () => {
+        return (
+            <div className="alert alert-danger" style={{display : state.error ? '' : 'none'}}>
+                {state.error}
+            </div>
+        )
+    }
+
+    const showSuccess = () => {
+        return (
+            <div className="alert alert-success" style={{display : state.success ? '' : 'none'}}>
+                {state.success}
+            </div>
+        )
     }
 
     const updateBlogForm = () => {
@@ -198,8 +235,10 @@ export const BlogUpdate = ({slug}) => {
                 <div className='col-md-8'>
                     {updateBlogForm()}
                     <div className="pt-3">
-                        <p>show success and error message</p>
+                        {showError()}
+                        {showSuccess()}
                     </div>
+                    <ImageOrNone src={`${API}/blog/photo/${slug}`} alt={state.title} style={{width:'100%'}}/>
                 </div>
                 <div className="col-md-4">
                     <div className="form-group pb-2">

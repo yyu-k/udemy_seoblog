@@ -11,7 +11,9 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 8. Avoiding nested then(), instead preferring to check if multiple promises are resolved
 9. React documentation provides that "You might be tempted to use an item’s index in the array as its key. In fact, that’s what React will use if you don’t specify a key at all. But the order in which you render items will change over time if an item is inserted, deleted, or if the array gets reordered. Index as a key often leads to subtle and confusing bugs." - this advice did not seem to be heeded by the course author. Index occasionally changed (e.g. to the _id provided by mongodb) for this reason but this was not consistently done. 
 10. Added ImageOrNone component to display a NO IMAGE image where there is none to display for experimentation purpose
-12. It is not apparent why FormData is included in an object initialised using useState when the FormData is not relevant to the rendering. Restructured in some places. See also https://react.dev/reference/react/useState#updating-objects-and-arrays-in-state  
+
+<h3>Random issues fixed</h3>
+1. Lodash merge will merge arrays instead of reassign the variable - this creates a problem when updating tags/categories of blogs, where additions will work but not removals. Changed to lodaash assign. 
 
 <h3>Out of date things that needed to be changed</h3>
 
@@ -53,7 +55,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 8. On some pages with redirection, e.g. on the sign up page, to avoid flashing before redirection by using a "loading" state coupled with UseEffect. See e.g. https://stackoverflow.com/questions/75786885/preventing-flashing-of-page-when-redirecting. Not done on all for learning purpose.
 9. withRouter does not work with the app router. Various workarounds. 
 10. Modification of head tag no longer done with next/head, but using the Metadata API. See https://nextjs.org/docs/app/building-your-application/optimizing/metadata, and also https://stronglytyped.uk/articles/open-graph-images-nextjs-app-router.
-11. getIntitialProps etc no longer used in the app router - just fetch directly. See e.g. https://stackoverflow.com/questions/76267351/how-to-fetch-data-server-side-in-the-latest-next-js-tried-getstaticprops-but-it
+11. getIntitialProps etc no longer used in the app router - just fetch directly. See e.g. https://stackoverflow.com/questions/76267351/how-to-fetch-data-server-side-in-the-latest-next-js-tried-getstaticprops-but-it. Note that fetch must be run with the option {cache : no-store} for pages where the content may change e.g. blogs, or the page will not update. 
 
 
 <h5>CSS/Bootstrap</h5>
@@ -66,4 +68,6 @@ Notes:
 4. Arguments for the navbar in reactstrap needs to be keyed in manually (e.g. expand={'md'}), otherwise the default values will hold and the navbar will not change its formatting regardless of screensize etc.
 5. admin password is adminpassword
 6. The problem with using the url as parameters for the purpose of API calls is that one has to be sure the parameters are always in English - an api call to e.g. /tag/delete/日本語 probably wouldn't work well
+7. For some reason, if FormData is used directly (e.g. const formData = new FormData()) instead of being part of an object (const state = {..., formData : new FormData()}), values that are set will disappear and the backend will receive empty fields. 
+
 

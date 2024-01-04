@@ -42,7 +42,8 @@ export const listBlogCatTag = (skip, limit) => {
 
 export const readSingleBlog = (slug) => {
     return fetch(`${API}/blog/${slug}`, {
-        method: 'GET'
+        method: 'GET',
+        cache: 'no-store'
     })
     .then((data) =>{
         return data.json();

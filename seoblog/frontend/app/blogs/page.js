@@ -1,4 +1,4 @@
-import Blogs from "@/components/Blog/Blog"
+import Blogs from "@/components/Blog/Blogs"
 import { listBlogCatTag } from "@/actions/blog"
 import { API, DOMAIN, APP_NAME } from "@/config";
 import { findCurrentPath } from "@/helpers/findCurrentPath";
