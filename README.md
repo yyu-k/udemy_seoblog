@@ -13,7 +13,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 10. Added ImageOrNone component to display a NO IMAGE image where there is none to display for experimentation purpose
 
 <h3>Random issues fixed</h3>
-1. Lodash merge will merge arrays instead of reassign the variable - this creates a problem when updating tags/categories of blogs, where additions will work but not removals. Changed to lodaash assign. 
+1. Lodash merge will merge arrays instead of reassign the variable - this creates a problem when updating tags/categories of blogs, where additions will work but not removals. Changed to lodash assign. 
 
 <h3>Out of date things that needed to be changed</h3>
 
@@ -70,5 +70,10 @@ Notes:
 6. The problem with using the url as parameters for the purpose of API calls is that one has to be sure the parameters are always in English - an api call to e.g. /tag/delete/日本語 probably wouldn't work well
 7. For some reason, if FormData is used directly (e.g. const formData = new FormData()) instead of being part of an object (const state = {..., formData : new FormData()}), values that are set will disappear and the backend will receive empty fields. 
 8. Putting a Link inside a section causes a hydration error. The hydration error appeared in the http://localhost:3000/blogs page, and removing the Card component made it clear that the Card component was the issue. Then the JSX was progressively removed and tested in the Card component to figure out what was causing the hydration error. 
+9. There is a strange bug where the first login on firefox causes a hydration error - but this error doesn't repeat even after restarting the browser / backend / frontend - not quite sure where it is coming from or just dev mode wierdness. 
+10. To check what the server rendered component looks like with no client rendering, disable javascript. 
+11. There are a number of pages where the number of blogs loaded is not controlled e.g. in the categories page, all blogs with that category is immediately loaded. If got time, need to do some kind of load more feature instead of loading any number of potential blogs. 
+12. Caching behaviour for fetch is different between dev and build mode. It's generally okay to fetch the same information multiple times e.g. for the once for the opengraph-image.js, once for the main page, etc, because in production mode the fetch will only occur once. See https://nextjs.org/docs/app/building-your-application/caching#request-memoization
+13. It appears that dangerouslySetInnerHTML can cause hydration errors because it is not possible to control how the user structures the blog post. It is possible to avoid this by rendering the content only on the client side, but not sure this is the best?
 
 

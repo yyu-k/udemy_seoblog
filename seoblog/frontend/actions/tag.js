@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch';
 import {API} from '../config';
 
 export const createTag = (tag, token) => {

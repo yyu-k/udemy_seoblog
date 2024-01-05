@@ -35,7 +35,7 @@ const Card = ({blog}) => {
                         <section>
                             <div className="pb-3" dangerouslySetInnerHTML={{__html : blog.excerpt}}/>
                         </section>
-                        <Link href={`blogs/${blog.slug}`} className="btn btn-primary pt-2">
+                        <Link href={`/blogs/${blog.slug}`} className="btn btn-primary pt-2">
                                 Read More
                         </Link>
                     </div>

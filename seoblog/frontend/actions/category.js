@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch';
 import {API} from '../config';
 
 export const createCategory = (category, token) => {
@@ -36,7 +35,8 @@ export const getAllCategories = () => {
 export const getOneCategory = (slug) => {
     return (
         fetch(`${API}/category/${slug}`, {
-            method: 'GET'
+            method: 'GET',
+            cache: 'no-store'
         }).then(response => {
             return response.json();
         })

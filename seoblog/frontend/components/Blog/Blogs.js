@@ -56,7 +56,7 @@ const Blogs = ({initialProps}) => {
             return (
                 <Link className="btn btn-primary me-1 ms-1 mt-3"
                     key={t._id} 
-                    href={`/categories/${t.slug}`}>
+                    href={`/tags/${t.slug}`}>
                     {t.name}
                 </Link>
             )

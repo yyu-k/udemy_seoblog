@@ -1,18 +1,8 @@
 const Tag = require('../models/tag_model');
+const Blog = require('../models/blog_model');
 const slugify = require('slugify');
+const { generateDBErrorMsg } = require('../helpers/generateDBErrorMsg');
 
-const generateErrorMsg = (err) => {
-    let errorMsg;
-    switch(err.code) {
-        case 11000:
-        case 11001:
-            errorMsg = 'Duplicate Tag Error - Tag category already exists';
-            break;
-        default:
-            errorMsg = 'Something has gone wrong with the database operation';
-    }
-    return `Error ${err.code}: ${errorMsg}`;
-}
 
 exports.create = (req, res) => {
     const { name } = req.body; 
@@ -26,7 +16,7 @@ exports.create = (req, res) => {
     })
     .catch((err) => {
         res.status(400).json({
-            error : generateErrorMsg(err)
+            error : generateDBErrorMsg(err)
         });
     })
 }
@@ -38,24 +28,54 @@ exports.list = (req, res) => {
     })
     .catch((err) => {
         res.status(400).json({
-            error: generateErrorMsg(err)
+            error: generateDBErrorMsg(err)
         });
     })
 }
 
 exports.read = (req, res) => {
     const slug = req.params.slug.toLowerCase();
-    Tag.findOne({slug})
-    .exec()
-    .then((success) => {
-        res.json(success) 
-        //TODO: return blogs associated with that tag
-    })
-    .catch((err) => {
-        res.status(400).json({
-            error : generateErrorMsg(err)
+    const tagResult = 
+        Tag.findOne({slug}).exec()
+        .then((success) => {
+            if (success === null) {
+                return {error : 'Tag not found'}
+            }
+            return (success) 
+        })
+        .catch((err) => {
+            return ({
+                error : generateDBErrorMsg(err)
+            });
         });
+    const blogResult = tagResult.then((tag) => {
+        if (tag.error) {
+            return tag
+        } else {
+            return (
+                Blog.find({tags : tag})
+                .populate('categories', '_id name slug')
+                .populate('tags', '_id name slug')
+                .populate('postedBy', '_id name')
+                .select('_id title slug excerpt categories postedBy tags createdAt updatedAt')
+                .exec()
+                .then((blog) => {
+                    return {tag : tag, blogs : blog}
+                }).catch((err) => {
+                    return ({
+                        error : generateDBErrorMsg(err)
+                    });
+                })
+            );
+        }
     });
+    blogResult.then(data => {
+        if (data.error) {
+            return res.status(400).json(data);
+        } else {
+            return res.json(data);
+        }
+    })
 }
 
 exports.remove = (req, res) => {
@@ -69,7 +89,7 @@ exports.remove = (req, res) => {
     })
     .catch((err) => {
         res.status(400).json({
-            error : generateErrorMsg(err)
+            error : generateDBErrorMsg(err)
         });
     });
 }

@@ -19,7 +19,7 @@ export const showTags = (blog) => {
     return (
         blog.tags.map((t,i) => {
             return (
-                <Link key={t._id} href={`/categories/${t.slug}`}>
+                <Link key={t._id} href={`/tags/${t.slug}`}>
                     <span className="btn btn-primary me-1 ms-1 mt-3">
                         {t.name}
                     </span>
