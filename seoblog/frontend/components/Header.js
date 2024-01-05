@@ -19,6 +19,7 @@ import {APP_NAME} from '../config';
 import {NewNavLink, NewNavbarBrand} from './NavBarLinks';
 import {signout, getLocalStorageUser} from '@/actions/auth';
 import { useRouter } from 'next/navigation';
+import { Search } from './Blog/Search';
 
 
 
@@ -90,6 +91,7 @@ const Header = () => {
   }, []);
  
   return (
+    <>
     <div>
         <ProgressBar
           height="4px"
@@ -130,6 +132,8 @@ const Header = () => {
         </Collapse>
       </Navbar>
     </div>
+    <Search/>
+    </>
   );
 }
 

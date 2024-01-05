@@ -294,6 +294,7 @@ exports.update = (req, res) => {
 }
 
 exports.listRelated = (req, res) => {
+    console.log('test');
     const limit = req.body.limit ? parseInt(req.body.limit) : 3;
     const {_id, categories} = req.body.blog;
     Blog.find({ _id: {$ne: _id}, categories: {$in: categories}})
@@ -310,3 +311,24 @@ exports.listRelated = (req, res) => {
         })
     })
 }
+
+exports.listSearch = (req, res) => {
+    const {search} = req.query;
+    if (search) {
+        Blog.find({
+            $or: [{title: {$regex: search, $options: 'i'}},
+                {body: {$regex: search, $options: 'i'}}
+            ] //case insensitive
+        })
+        .select('-photo -body')
+        .then((blogs) => {
+            return res.json(blogs)
+        })
+        .catch((err) => {
+            return res.status(400).json({
+                error : generateDBErrorMsg(err)
+            })
+        });   
+    }
+}
+

@@ -1,4 +1,5 @@
 import {API} from '../config';
+import queryString from 'query-string';
 
 export const createBlog = (blog, token) => {
     //blog includes all the form data - blog itself, image, etc. 
@@ -125,4 +126,20 @@ export const updateBlog = (blog, token, slug) => {
             return {error : err.message} //modified to return an object, or else there will be a complain that data is undefined when there is an error
         })
     );
+}
+
+export const listSearch = (params) => {
+    const query = queryString.stringify(params); //e.g. ?limit=100&pagination=10
+    return fetch(`${API}/blog/search?${query}`, {
+        method: 'GET'
+    })
+    .then((data) =>{
+        console.log(data);
+        return data.json();
+    })
+    .catch((err) => {
+        return {
+            error : err.message
+        }
+    })
 }

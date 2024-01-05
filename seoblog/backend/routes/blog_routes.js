@@ -11,6 +11,8 @@ router.get('/blog/list',
     blogControllers.list);
 router.post('/blog/listBlogCatTag',
     blogControllers.listBlogCatTag);
+router.get('/blog/search',
+    blogControllers.listSearch);
 router.get('/blog/:slug', 
     blogControllers.read);
 router.get('/blog/photo/:slug',
@@ -24,6 +26,9 @@ router.put('/blog/:slug',
     authControllers.adminMiddleware,
     blogControllers.update);
 router.post('/blog/related',
-    blogControllers.listRelated)
+    blogControllers.listRelated);
+
+
+
 
 module.exports = router;

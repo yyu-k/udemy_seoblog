@@ -75,5 +75,6 @@ Notes:
 11. There are a number of pages where the number of blogs loaded is not controlled e.g. in the categories page, all blogs with that category is immediately loaded. If got time, need to do some kind of load more feature instead of loading any number of potential blogs. 
 12. Caching behaviour for fetch is different between dev and build mode. It's generally okay to fetch the same information multiple times e.g. for the once for the opengraph-image.js, once for the main page, etc, because in production mode the fetch will only occur once. See https://nextjs.org/docs/app/building-your-application/caching#request-memoization
 13. It appears that dangerouslySetInnerHTML can cause hydration errors because it is not possible to control how the user structures the blog post. It is possible to avoid this by rendering the content only on the client side, but not sure this is the best?
+14. The ordering of routes matters where there are variables e.g. /blog/:slug. If router.get(/blog/search) is placed after router.get(/blog/:slug), then the calls to search will always be treated as a slug. 
 
 
