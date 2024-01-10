@@ -62,14 +62,14 @@ export const Search = () => {
         return (
             <form onSubmit={searchSubmit}>
                 <div className="row">
-                    <div className="col-md-8">
+                    <div className="col-md-10">
                         <input type='search'
                             className="form-control"
                             placeholder="Search blogs"
                             onChange={handleChange}/>
                     </div>
-                    <div className="col-md-4">
-                        <button className="btn btn-block btn-outline-primary" 
+                    <div className="d-grid gap-2 col-md-2">
+                        <button className="btn btn-outline-primary" 
                             type='submit'>
                             Search
                         </button>

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import moment from "moment"
 import { getCookie, getLocalStorageUser } from "@/actions/auth"
-import { listBlogs, updateBlog, deleteBlog} from "@/actions/blog"
+import { listBlogs, deleteBlog} from "@/actions/blog"
 
 
 export const BlogRead = () => {
@@ -78,7 +78,7 @@ export const BlogRead = () => {
                     <div key={blog._id} className="pb-5">
                         <h3>{blog.title}</h3>
                         <p className="mark">
-                            Written by {blog.postedBy.name} | Published on {moment(blog.updatedAt).fromNow()}
+                            Written by <Link href={`/profile/${blog.postedBy.username}`}>{blog.postedBy.username}</Link> | Published on {moment(blog.updatedAt).fromNow()}
                         </p>
                         <button className="btn btn-sm btn-danger" onClick={() => deleteConfirm(blog.slug, blog.title)}>
                             Delete

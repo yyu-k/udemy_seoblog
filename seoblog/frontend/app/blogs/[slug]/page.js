@@ -21,9 +21,8 @@ export async function generateMetadata({ params,}, parent) {
     })
 
   return {
-    //metadataBase: new URL(`${DOMAIN}/blogs/${blog.slug}`),
-    title: `${blog.title} | ${APP_NAME}`,
     metadataBase: new URL(DOMAIN),
+    title: `${blog.title} | ${APP_NAME}`,
     description: blog.metaDescription,
     alternates: {
       canonical: '/'

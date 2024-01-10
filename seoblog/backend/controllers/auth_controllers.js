@@ -85,6 +85,8 @@ exports.signout = (req, res) => {
 
 //this is middleware, placed between the routes and the actual processing logic in the routes file
 exports.require_sign_in = (req, res, next) => {
+    //Note: nextWithError works because any arguement passed to next() means that the middleware encountered an error 
+    //https://expressjs.com/en/guide/error-handling.html
     const nextWithError = (err) => {
         if (err) {
           return (res.status(err.status).json({

@@ -48,7 +48,7 @@ const user_schema = new mongoose.Schema({
         type : String,
         default : '' //reset_password_link is empty by default
     }
-}, {timestamp : true});
+}, {timestamps : true});
 
 user_schema.methods = {
     //authenticate password

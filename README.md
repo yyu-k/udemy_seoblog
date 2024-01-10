@@ -60,6 +60,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 
 <h5>CSS/Bootstrap</h5>
 1. Margins: ml/mr has been replaced with ms (start) and me (end). See https://stackoverflow.com/questions/69301335/bootstrap-padding-left-and-right-is-not-working. More generally various class name changes e.g. font-weight to fw
+2. btn-block no longer works - see https://stackoverflow.com/questions/23183343/bootstrap-btn-block-not-working. The parent div now looks something like div className="d-grid gap-2 col-md-2"
 
 Notes:
 1. next 14.0.1 doesn't seem to work in Windows - run this in Linux or use WSL2 (actually the problem seems to be that the directory name cannot contain the words "ude" in Windows for some reason) 
