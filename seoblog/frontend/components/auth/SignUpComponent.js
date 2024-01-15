@@ -36,7 +36,6 @@ const SignUpComponent = () => {
         .then((data) => { //this assumes that the API gives a string as an error instead of the actual error object
             if (data.error) {
                 setValues({...values, error: data.error, loading: false});
-                console.log(data.error); //Added for debugging
             } else {
                 setValues({...values, name: '', email: '', password: '', error: '', loading: false, message: data.message, showForm: false});
             }

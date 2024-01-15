@@ -44,6 +44,10 @@ const user_schema = new mongoose.Schema({
         data : Buffer,
         contentType : String
     },
+    about : {
+        type : String,
+        trim : true
+    },
     reset_password_link : {
         type : String,
         default : '' //reset_password_link is empty by default

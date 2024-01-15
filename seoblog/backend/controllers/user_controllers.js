@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const formidable = require('formidable');
 const fs = require('fs');
+const { firstValues } = require('formidable/src/helpers/firstValues.js');
 
 const User = require('../models/user_model');
 const Blog = require('../models/blog_model');
@@ -51,7 +52,7 @@ exports.publicProfile = (req, res) => {
 }
 
 exports.update = (req, res) => {
-    const form = new formidable.IncomingForm();
+    const form = new formidable.IncomingForm({keepExtensions : true});
     form.parse(req, (err, fields, files) => {
         if (err) {
             return res.status(400).json({
@@ -59,15 +60,23 @@ exports.update = (req, res) => {
             })
         }
         const user = req.profile;
-        _.extend(user, fields);
-        if (files.photo) {
-            if (files.photo.size > 10000000) {
+        const values = firstValues(form, fields, []);
+        //validation
+        if (values.password && values.password.length < 6) {
+            return res.status(400).json({
+                error : 'Password is shorter than the minimum length of 6 characters'
+            })
+        }      
+        _.extend(user, values);
+        const { photo } = firstValues(form, files, []);
+        if (photo) {
+            if (photo.size > 10000000) {
                 return res.status(400).json({
                     error : 'image should be less than 1mb'
                 })
             }
-            user.photo.data = fs.readFileSync(files.photo.path);
-            user.photo.contentType = files.photo.type;
+            user.photo.data = fs.readFileSync(photo.filepath);
+            user.photo.contentType = photo.mimetype;
         }
         user.save()
         .then((user) => {
@@ -95,6 +104,10 @@ exports.photo = (req, res) => {
         if (user.photo.data) {
             res.set('Content-Type', user.photo.contentType)
             return res.send(user.photo.data);
+        } else {
+            res.status(404).json({
+                error : 'No image set by user'
+            })
         }
 
     })

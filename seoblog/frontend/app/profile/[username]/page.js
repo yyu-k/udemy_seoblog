@@ -3,6 +3,8 @@ import moment from "moment"
 import { SimpleError } from "@/components/SimpleError"
 import { userPublicProfile } from "@/actions/user"
 import { DOMAIN, APP_NAME } from "@/config"
+import { API } from "@/config"
+import { ImageOrNone } from "@/components/ImageOrNone"
 
 export async function generateMetadata({ params,}, parent) {
     return {
@@ -59,13 +61,21 @@ export default async function Page({params}) {
                 <div className="col-md-12 mt-4 mb-4">
                     <div className="card">
                         <div className="card-body">
-                            <h5>{user.name}</h5>
-                            <Link href={`${user.profile}`}>
-                                View Profile
-                            </Link>
-                            <p className="text-muted">
-                                Joined {moment(user.createdAt).fromNow()}
-                            </p>
+                            <div className="row">
+                                <div className="col-md-8">
+                                    <h5>{user.name}</h5>
+                                    <p className="text-muted">
+                                        Joined {moment(user.createdAt).fromNow()}
+                                    </p>
+                                </div>
+                                <div className="col-md-4">
+                                    <ImageOrNone src={`${API}/user/photo/${user.username}`} 
+                                    className="img img-fluid img-thumbnail mb-3"
+                                    style={{maxHeight: '100px', maxWidth: '100%'}}
+                                    alt='profile image'
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

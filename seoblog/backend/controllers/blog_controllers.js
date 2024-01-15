@@ -294,7 +294,6 @@ exports.update = (req, res) => {
 }
 
 exports.listRelated = (req, res) => {
-    console.log('test');
     const limit = req.body.limit ? parseInt(req.body.limit) : 3;
     const {_id, categories} = req.body.blog;
     Blog.find({ _id: {$ne: _id}, categories: {$in: categories}})
