@@ -1,4 +1,5 @@
 import {API} from '../config';
+import { handleResponse } from './auth';
 
 export const createCategory = (category, token) => {
     return (
@@ -11,6 +12,7 @@ export const createCategory = (category, token) => {
             },
             body: JSON.stringify(category)
         }).then(response => {
+            handleResponse(response);
             return response.json();
         })
         .catch(err => {
@@ -56,6 +58,8 @@ export const deleteCategory = (slug, token) => {
                 'Authorization' : `Bearer ${token}`
             }
         }).then(response => {
+            console.log(response);
+            handleResponse(response);
             return response.json();
         })
         .catch(err => {

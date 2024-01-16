@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getLocalStorageUser, getCookie } from "@/actions/auth";
+import { getLocalStorageUser, getCookie, } from "@/actions/auth";
 import { createCategory, getAllCategories, deleteCategory } from "@/actions/category";
 
 const Category = () => {

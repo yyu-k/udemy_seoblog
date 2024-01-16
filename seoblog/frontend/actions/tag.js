@@ -1,4 +1,5 @@
 import {API} from '../config';
+import { handleResponse } from './auth';
 
 export const createTag = (tag, token) => {
     return (
@@ -11,6 +12,7 @@ export const createTag = (tag, token) => {
             },
             body: JSON.stringify(tag)
         }).then(response => {
+            handleResponse(response);
             return response.json();
         })
         .catch(err => {
@@ -55,6 +57,7 @@ export const deleteTag = (slug, token) => {
                 'Authorization' : `Bearer ${token}`
             }
         }).then(response => {
+            handleResponse(response);
             return response.json();
         })
         .catch(err => {

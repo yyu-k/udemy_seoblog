@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch';
 import {API} from '../config';
 import cookie from 'js-cookie';
 
@@ -114,4 +113,14 @@ export const updateUser = (user) => {
     if (getLocalStorageUser()) {
         setLocalStorage('user', user);
     }
+}
+
+export const handleResponse = (res) => { 
+    //can only be used inside a functional component due to the useRouter hook;
+    if (res.status === 401 && typeof window !== 'undefined') { //unauthorized
+        signout(() => {
+            window.location.href = '/signin?rdr=Login%20session%20timed%20out'
+        })
+    }
+    return
 }

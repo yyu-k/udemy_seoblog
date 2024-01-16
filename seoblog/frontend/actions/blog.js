@@ -1,6 +1,6 @@
 import {API} from '../config';
 import queryString from 'query-string';
-import { getLocalStorageUser } from './auth';
+import { getLocalStorageUser, handleResponse } from './auth';
 
 export const createBlog = (blog, token) => {
     //blog includes all the form data - blog itself, image, etc. 
@@ -119,6 +119,7 @@ export const deleteBlog = (slug, token) => {
                 'Content-Type' : 'application/json'
             }
         }).then(response => {
+            handleResponse(response);
             return response.json();
         })
         .catch(err => {
@@ -145,6 +146,7 @@ export const updateBlog = (blog, token, slug) => {
             },
             body: blog
         }).then(response => {
+            handleResponse(response);
             return response.json();
         })
         .catch(err => {
