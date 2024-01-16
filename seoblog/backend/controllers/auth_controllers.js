@@ -1,8 +1,10 @@
 const User = require('../models/user_model'); //the mongoose schema for User
+const Blog = require('../models/blog_model')
 const  { nanoid } = require('nanoid');
 const { logger } = require('../backend_logger')
 const jwt = require('jsonwebtoken');
 const {expressjwt} = require('express-jwt');
+const generateDBErrorMsg = require('../helpers/generateDBErrorMsg');
 
 exports.signup = (req, res) => {
     const {name, email, password} = req.body;
@@ -146,5 +148,26 @@ exports.adminMiddleware = (req, res, next) => { //middleware requires next
         return res.status(400).json({
             error: 'Error encountered while trying to find user by the relevant _id'
         })
+    })
+}
+
+exports.canUpdateDeleteBlog = (req, res, next) => {
+    const slug = req.params.slug.toLowerCase();
+    Blog.findOne({slug})
+    .exec()
+    .then((blog) => {
+        const authorizedUser = blog.postedBy._id.toString() === req.auth._id.toString(); //need to apply the require_sign_in middleware to get this
+        if (!authorizedUser) {
+            return res.status(400).json({
+                error : 'Authorization error'
+            })
+        } else {
+            next();
+        }
+    })
+    .catch(err => {
+        return res.status(400).json({
+            error : generateDBErrorMsg(err)
+        });
     })
 }

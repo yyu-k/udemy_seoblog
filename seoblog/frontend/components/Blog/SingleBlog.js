@@ -7,7 +7,7 @@ import moment from "moment"
 import { showCategories, showTags, showRelatedBlogs } from "@/helpers/blog"
 import { useState, useEffect } from "react"
 import { listRelated } from "@/actions/blog"
-
+import { ImageOrNone } from "../ImageOrNone"
 
 export const SingleBlog = ({blog}) => {
     const [related, setRelated] = useState();
@@ -39,7 +39,7 @@ export const SingleBlog = ({blog}) => {
             <div className="container-fluid">
                 <section>
                     <div className="row" style={{marginTop:'-10px'}}>
-                        <img src={`${API}/blog/photo/${blog.slug}`}
+                        <ImageOrNone src={`${API}/blog/photo/${blog.slug}`}
                             alt={blog.title}
                             className="img img-fluid featured-image"
                         />

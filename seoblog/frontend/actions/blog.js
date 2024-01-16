@@ -1,10 +1,18 @@
 import {API} from '../config';
 import queryString from 'query-string';
+import { getLocalStorageUser } from './auth';
 
 export const createBlog = (blog, token) => {
     //blog includes all the form data - blog itself, image, etc. 
+    const user = getLocalStorageUser();
+    if (!user) {
+        return {error : 'Not logged in'};
+    } 
+    const apiEndPoint = user.role === 1 ?
+        `${API}/blog/create` :
+        `${API}/user/blog/create`;
     return (
-        fetch(`${API}/blog/create`, {
+        fetch(apiEndPoint, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -76,8 +84,11 @@ export const listRelated = (blog, limit = 3) => {
     );
 }
 
-export const listBlogs = () => {
-    return fetch(`${API}/blog/list`, {
+export const listBlogs = (user) => {
+    const apiEndPoint = user 
+        ? `${API}/${user.username}/blogs`
+        : `${API}/blog/list` 
+    return fetch(apiEndPoint, {
         method: 'GET'
     })
     .then((data) =>{
@@ -92,8 +103,15 @@ export const listBlogs = () => {
 
 export const deleteBlog = (slug, token) => {
     //blog includes all the form data - blog itself, image, etc. 
+    const user = getLocalStorageUser();
+    if (!user) {
+        return {error : 'Not logged in'};
+    } 
+    const apiEndPoint = user.role === 1 
+        ? `${API}/blog/${slug}` 
+        : `${API}/user/blog/${slug}`
     return (
-        fetch(`${API}/blog/${slug}`, {
+        fetch(apiEndPoint, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -111,8 +129,15 @@ export const deleteBlog = (slug, token) => {
 
 export const updateBlog = (blog, token, slug) => {
     //blog includes all the form data - blog itself, image, etc. 
+    const user = getLocalStorageUser();
+    if (!user) {
+        return {error : 'Not logged in'};
+    } 
+    const apiEndPoint = user.role === 1 
+        ? `${API}/blog/${slug}` 
+        : `${API}/user/blog/${slug}`
     return (
-        fetch(`${API}/blog/${slug}`, {
+        fetch(apiEndPoint, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',

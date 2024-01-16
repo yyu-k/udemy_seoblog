@@ -70,7 +70,7 @@ exports.update = (req, res) => {
         _.extend(user, values);
         const { photo } = firstValues(form, files, []);
         if (photo) {
-            if (photo.size > 10000000) {
+            if (photo.size > 1000000) {
                 return res.status(400).json({
                     error : 'image should be less than 1mb'
                 })

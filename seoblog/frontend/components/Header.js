@@ -54,6 +54,17 @@ const Header = () => {
       <NavItem>
         <NavLink style={{'cursor': 'pointer'}} onClick={() => {
           if (user.role === 1) {
+            router.push('/admin/crud/blog');
+          } else {
+            router.push('/user/crud/blog');
+          }
+        }}>
+        Create Blog
+        </NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink style={{'cursor': 'pointer'}} onClick={() => {
+          if (user.role === 1) {
             router.push('/admin');
           } else {
             router.push('/user');

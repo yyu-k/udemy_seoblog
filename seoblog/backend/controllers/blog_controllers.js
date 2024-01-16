@@ -1,3 +1,4 @@
+const User = require('../models/user_model');
 const Blog = require('../models/blog_model');
 const Category = require('../models/categories_model');
 const Tag = require('../models/tag_model');
@@ -69,7 +70,7 @@ exports.create = (req,res) => {
    //handle photo/files
    const { photo } = firstValues(form, files, []);
    if (photo) {
-    if (photo.size > 10000000) { //validation to make sure photo less than 1 mb
+    if (photo.size > 1000000) { //validation to make sure photo less than 1 mb
         return res.status(400).json({
             error : 'Image should be less than 1 mb in size'
         });    
@@ -264,7 +265,7 @@ exports.update = (req, res) => {
            //handle photo/files
            const { photo } = firstValues(form, files, []);
            if (photo) {
-            if (photo.size > 10000000) { //validation to make sure photo less than 1 mb
+            if (photo.size > 1000000) { //validation to make sure photo less than 1 mb
                 return res.status(400).json({
                     error : 'Image should be less than 1 mb in size'
                 });    
@@ -331,3 +332,22 @@ exports.listSearch = (req, res) => {
     }
 }
 
+exports.listForUser = (req, res) => {
+    const user = User.findOne({username : req.params.username}).exec();
+    const blogs = user.then((user) => {
+        const id = user._id;
+        return Blog.find({postedBy : id})
+            .populate('categories', '_id name slug')
+            .populate('tags', '_id name slug')
+            .populate('postedBy','_id name username')
+            .select('_id title slug postedBy createdAt updatedAt')
+            .exec()
+    })
+    blogs.then(blogs => {
+        return res.json(blogs);
+    }).catch(err => {
+        return res.status(400).json({
+            error : generateDBErrorMsg(err)
+        })    
+    })
+}

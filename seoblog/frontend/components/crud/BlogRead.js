@@ -6,12 +6,20 @@ import { getCookie, getLocalStorageUser } from "@/actions/auth"
 import { listBlogs, deleteBlog} from "@/actions/blog"
 
 
-export const BlogRead = () => {
+export const BlogRead = ({userDashboard}) => {
     const [blogs, setBlogs] = useState([]);
     const [msg, setMsg] = useState('');
     const token = getCookie('token');
     const loadBlogs = () => {
-        listBlogs()
+        let user;
+        if (userDashboard) {
+            user = getLocalStorageUser();
+            if (!user) {
+                setMsg('Cannot get logged in user - please log in')
+                return 
+            }
+        } 
+        listBlogs(user)
         .then((data) => {
             if (data.error) {
                 console.log(data.error);
