@@ -109,3 +109,9 @@ export const getLocalStorageUser = () => {
         }
     }
 }
+
+export const updateUser = (user) => {
+    if (getLocalStorageUser()) {
+        setLocalStorage('user', user);
+    }
+}

@@ -1,14 +1,10 @@
 'use client'
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-
-import { getCookie, getLocalStorageUser } from "@/actions/auth";
+import { getCookie } from "@/actions/auth";
 import { getProfile, updateProfile } from "@/actions/user";
-import { API } from "@/config";
 import { ImageOrNone } from "../ImageOrNone";
-import { profile } from "winston";
+import { updateUser } from "@/actions/auth";
 
 const ProfileUpdate = () => {
     const [values, setValues] = useState({
@@ -69,6 +65,14 @@ const ProfileUpdate = () => {
                     const base64String = Buffer.from(data.photo.data.data).toString('base64')
                     setPic(showPicture(`data:${data.photo.contentType};base64,${base64String}`))
                 } 
+                const newUser = {
+                    id : data.id,
+                    username : data.username,
+                    name : data.name,
+                    email : data.email,
+                    role : data.role
+                }
+                updateUser(newUser);
             }
         })
         return
