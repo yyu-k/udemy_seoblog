@@ -1,4 +1,7 @@
-export const CommentBox = () => {       
+import { CommentCreate } from "./CommentCreate"
+import { CommentRead } from "./CommentRead"
+
+export const CommentBox = ({slug}) => {       
     // useEffect(() => {
     //     const s = document.createElement('script');
     //     s.setAttribute("type","text/javascript");
@@ -12,8 +15,9 @@ export const CommentBox = () => {
 
     return (
         <>
-            <div className="container text-muted text-center">
-                A comment box should have been here - see readme
+            <div className="container text-muted">
+                <CommentCreate slug={slug}/>
+                <CommentRead slug={slug}/>
             </div>
         </>
     )

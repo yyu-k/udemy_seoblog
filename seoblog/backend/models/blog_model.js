@@ -7,8 +7,8 @@ const blogSchema = new mongoose.Schema({
         type : String,
         trim : true, //remove whitespace
         required : true,
-        min: 3,
-        max : 160, //don't think this actually does anything
+        minLength: 3,
+        maxLength : 160
     },
     slug : {
         type : String,

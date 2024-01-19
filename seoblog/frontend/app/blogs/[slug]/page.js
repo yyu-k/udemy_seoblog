@@ -44,6 +44,6 @@ export async function generateMetadata({ params,}, parent) {
 
 export default async function Page({params}) {
     return (
-      <SingleBlog blog={await readSingleBlog(params.slug)}/>
+      <SingleBlog blog={await readSingleBlog(params.slug)} slug={params.slug}/>
     )
   }

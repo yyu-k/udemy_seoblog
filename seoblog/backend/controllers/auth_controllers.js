@@ -29,7 +29,7 @@ exports.signup = (req, res) => {
                     })
                     .catch((err) => {
                         return res.status(400).json({ //bad request
-                            error: err.message //edited from just err
+                            error: generateDBErrorMsg(err) //edited from just err
                         })
                     })                
                 }

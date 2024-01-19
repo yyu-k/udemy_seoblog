@@ -34,6 +34,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 1. Query.prototype.exec() no longer accepts a callback
 2. Model.prototype.save() no longer accepts a callback
 3. When merging earlier mongoose documents with newer updates sent via formidable.Fields, the _.merge(doc, fields) step should happen AFTER necessary changes are made on the FIELDS object e.g. splitting up a string of categories into an array. Otherwise, there will be errors such as CastError: Cast to ObjectId failed for value "657d41ba286c0e0633253c36,658412b168d0b80ebe8a5b63" (type string) at path "tags" because of "BSONError". This issue arises quite frequently because all of the fields are stored as an array which need to be extracted using firstValues or otherwise. 
+4. min, max renamed to minLength, maxLength for strings
 
 <h5>Random extensions<h5>
 1. Slugify: toLowerCase is now an option ({lower : true})
@@ -79,5 +80,7 @@ Notes:
 12. Caching behaviour for fetch is different between dev and build mode. It's generally okay to fetch the same information multiple times e.g. for the once for the opengraph-image.js, once for the main page, etc, because in production mode the fetch will only occur once. See https://nextjs.org/docs/app/building-your-application/caching#request-memoization
 13. It appears that dangerouslySetInnerHTML can cause hydration errors because it is not possible to control how the user structures the blog post. It is possible to avoid this by rendering the content only on the client side, but not sure this is the best?
 14. The ordering of routes matters where there are variables e.g. /blog/:slug. If router.get(/blog/search) is placed after router.get(/blog/:slug), then the calls to search will always be treated as a slug. 
+15. Changing size of container : see: https://stackoverflow.com/questions/20984874/how-to-make-a-smaller-container-in-bootstrap
+16. Centering a div: see : https://stackoverflow.com/questions/42388989/bootstrap-center-vertical-and-horizontal-alignment (used mx-auto)
 
 

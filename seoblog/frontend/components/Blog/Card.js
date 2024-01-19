@@ -2,6 +2,7 @@ import moment from "moment";
 import Link from "next/link";
 import { API } from "@/config";
 import { showTags, showCategories } from "@/helpers/blog";
+import { ImageOrNone } from "../ImageOrNone";
 
 const Card = ({blog}) => {
     return (
@@ -24,7 +25,7 @@ const Card = ({blog}) => {
                 <div className='row'>
                     <div className="col-md-4">
                         <section>
-                            <img className="img img-fluid"
+                            <ImageOrNone className="img img-fluid"
                             style={{maxHeight: 'auto',
                                     width : '100%'}}
                             src={`${API}/blog/photo/${blog.slug}`}

@@ -8,9 +8,9 @@ import { showCategories, showTags, showRelatedBlogs } from "@/helpers/blog"
 import { useState, useEffect } from "react"
 import { listRelated } from "@/actions/blog"
 import { ImageOrNone } from "../ImageOrNone"
-import { CommentBox } from "../crud/CommentBox"
+import { CommentBox } from "../comment/CommentBox"
 
-export const SingleBlog = ({blog}) => {
+export const SingleBlog = ({blog, slug}) => {
     const [related, setRelated] = useState();
     const loadRelated = () => {
         listRelated({'blog' : blog})
@@ -76,7 +76,7 @@ export const SingleBlog = ({blog}) => {
                 </div>
             </div>
             <div className="container pb-5">
-                <CommentBox/>
+                <CommentBox slug={slug}/>
             </div>
             </article>
         </main>
