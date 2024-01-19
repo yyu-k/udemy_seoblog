@@ -123,8 +123,8 @@ const Header = () => {
             <ShowSignInSignUp bool={!user}/>
             <ShowSignOut bool={user}/>
             <NavItem>
-              <NavLink href="https://github.com/reactstrap/reactstrap">
-                GitHub
+              <NavLink href="/contact">
+                Contact
               </NavLink>
             </NavItem>
             <UncontrolledDropdown nav inNavbar>

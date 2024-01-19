@@ -25,6 +25,12 @@ exports.sendEmailWithNodemailer = (req, res, emailData) => {
         success: true,
       });
     })
-    .catch((err) => logger.error(`Problem sending email: ${err}`));
+    .catch((err) => {
+      logger.error(`Problem sending email: ${err}`);
+      return res.status(400).json({
+        success : false,
+        error : `Something has gone wrong with sending the email, please alert the administrator of the website`
+      })
+    });
 };
  

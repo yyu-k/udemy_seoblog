@@ -5,6 +5,7 @@ import { userPublicProfile } from "@/actions/user"
 import { DOMAIN, APP_NAME } from "@/config"
 import { API } from "@/config"
 import { ImageOrNone } from "@/components/ImageOrNone"
+import { ContactForm } from "@/components/form/ContactForm"
 
 export async function generateMetadata({ params,}, parent) {
     return {
@@ -101,9 +102,7 @@ export default async function Page({params}) {
                                 Message {user.name}
                             </h5>
                             <br/>
-                            <p>
-                                contact form
-                            </p>
+                            <ContactForm authorEmail={user.email}/>
                         </div>
                     </div>
                 </div>
