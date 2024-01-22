@@ -19,13 +19,15 @@ export const sendComment = (data, token) => {
     );
 }
 
-export const getComment = (slug) => {
+export const getComment = (skip, limit, slug) => {
     return (
         fetch(`${API}/comment/get/${slug}`, {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
-            }
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({skip, limit})
         }).then(response => {
             return response.json();
         })

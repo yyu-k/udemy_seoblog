@@ -14,12 +14,13 @@ export const CommentCreate = ({slug}) => {
         buttonText: 'Submit',
         error : '',
         success : false,
-        user : ''
+        user : '',
+        loading : true
     })
     
     useEffect(()=> {
         const user = getLocalStorageUser();
-        setState({...state, user});
+        setState({...state, user, loading : false});
     }, [])
 
     const PleaseLogIn = () => {
@@ -33,6 +34,7 @@ export const CommentCreate = ({slug}) => {
     }
 
     const submit = (e) => {
+        const event = new Event("comment");
         const token = getCookie('token');
         e.preventDefault();
         setState({...state, buttonText : "Submitting"})
@@ -42,6 +44,7 @@ export const CommentCreate = ({slug}) => {
                 setState({...state, buttonText : "Submit", error : response.error})
             } else {
                 setState({...state, message : '', buttonText : "Submit", error : '', success : true})
+                window.dispatchEvent(event);
             }
         })
     }
@@ -89,7 +92,7 @@ export const CommentCreate = ({slug}) => {
         }
     }
 
-    if (!state.user) {
+    if (!state.user && !state.loading) {
         return <PleaseLogIn/>;
     }
     return (

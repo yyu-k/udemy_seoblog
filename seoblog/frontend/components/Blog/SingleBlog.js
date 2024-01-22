@@ -25,11 +25,11 @@ export const SingleBlog = ({blog, slug}) => {
         loadRelated();
     },[]);
 
-    if (blog.error) {
+    if (blog === null || blog.error) {
         return (
             <>
             <div className="alert alert-warning" role='alert'>
-                {blog.error}
+                Cannot get the blog
             </div>
             </>
         )

@@ -4,7 +4,7 @@ import { APP_NAME, DOMAIN, API } from "@/config"
 
 export async function generateMetadata({ params,}, parent) {
   const blog = await readSingleBlog(params.slug);
-  if (blog.error) {
+  if (blog === null || blog.error) {
     return 
   }
 

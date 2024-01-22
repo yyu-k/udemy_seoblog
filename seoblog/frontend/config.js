@@ -9,3 +9,4 @@ export const DOMAIN = nextConfig.publicRuntimeConfig.PRODUCTION
     : nextConfig.publicRuntimeConfig.DOMAIN_DEVELOPMENT;
 
 export const BLOG_LOAD_LIMIT = 2;
+export const COMMENT_LOAD_LIMIT = 3;

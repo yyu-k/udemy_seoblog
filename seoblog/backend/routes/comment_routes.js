@@ -7,7 +7,7 @@ router.post('/comment/create',
     authControllers.require_sign_in,
     commentControllers.create);
 
-router.get('/comment/get/:slug', 
+router.post('/comment/get/:slug', 
     commentControllers.get);
 
 module.exports = router;

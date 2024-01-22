@@ -23,9 +23,14 @@ exports.create = (req, res) => {
 
 exports.get = (req, res) => {
     const slug = req.params.slug.toLowerCase();
+    const limit = req.body.limit ? parseInt(req.body.limit) : 5 //number of posts/categories/tags to be loaded in one go
+    const skip = req.body.skip ? parseInt(req.body.skip) : 0 //how many to skip i.e. already loaded
     Comment.find({slug}) //find all with slug
     .populate('postedBy', 'username photo')
     .select('-slug')
+    .sort({createdAt: -1}) //newest first
+    .skip(skip)
+    .limit(limit)
     .exec()
     .then((data) => {
         return res.json(data);
