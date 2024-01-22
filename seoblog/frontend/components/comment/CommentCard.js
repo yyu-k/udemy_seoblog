@@ -8,7 +8,7 @@ export const CommentCard = ({comment}) => {
         <div className="card mb-3">
             <div className="row no-gutters">
                 <div className="col-md-3">
-                    <ImageOrNone src={imgString} className="img-fluid"/>
+                    <ImageOrNone src={imgString} className="img-thumbnail img-fluid" width="150" height="150"/>
                 </div>
                 <div className="col-md-9">
                     <div className="card-body">
