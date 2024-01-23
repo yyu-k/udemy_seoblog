@@ -3,13 +3,15 @@
 import { useState } from "react"
 import { forgotPassword } from "@/actions/auth"
 import { SimpleError } from "@/components/SimpleError";
+import Loading from "@/components/LoadingComponent";
 
 export default function Page() {
     const [state, setState] = useState({
         email : '',
         message : '',
         error : '',
-        showForm : true
+        showForm : true,
+        loading : false
     });
 
     const handleChange = (name) => (e) => {
@@ -19,16 +21,17 @@ export default function Page() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setState({...state, message: '', error : ''});
+        setState({...state, message: '', error : '', loading : true});
         forgotPassword(state.email)
         .then(data=> {
             if(data.error) {
-                setState({...state, error : data.error});
+                setState({...state, error : data.error, loading : false});
             } else {
                 setState({...state, 
                     message : data.success ? 'Forgot password link sent to your email' : 'Something has gone wrong, please try again later',
                     email: '',
-                    showForm: false});
+                    showForm: false,
+                    loading : false});
             }
         })
     }
@@ -51,6 +54,14 @@ export default function Page() {
         }
     }
 
+    const showLoading = () => {
+        if (state.loading) {
+            return (
+                <Loading/>
+            )
+        }
+    }
+
     const showForm = () => {
         if (state.showForm) {
             return (
@@ -58,7 +69,7 @@ export default function Page() {
                 <div className="container">
                     <form onSubmit={handleSubmit}>
                         <div className="form-group pt-5">
-                            <input type="text" onChange={handleChange("email")} className="form-control" value={state.email} placeholder="Please type your registered email" required/>
+                            <input type="email" onChange={handleChange("email")} className="form-control" value={state.email} placeholder="Please type your registered email" required/>
                         </div>
                         <div>
                             <button className="btn btn-primary mt-5">
@@ -78,6 +89,7 @@ export default function Page() {
         <hr/>
         {showError()}
         {showMessage()}
+        {showLoading()}
         {showForm()}
       </div>
     )
