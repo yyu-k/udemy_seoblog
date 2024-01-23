@@ -124,3 +124,39 @@ export const handleResponse = (res) => {
     }
     return
 }
+
+export const forgotPassword = (email) => {
+    return (
+        fetch(`${API}/forgot-password`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email})
+        }).then(response => {
+            return response.json();
+        })
+        .catch(err => {
+            return {error : err.message} //modified to return an object, or else SignUpComponent.js will complain that data is undefined when there is an error
+        })
+    );
+};
+
+export const resetPassword = (resetInfo) => {
+    return (
+        fetch(`${API}/reset-password`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(resetInfo)
+        }).then(response => {
+            return response.json();
+        })
+        .catch(err => {
+            return {error : err.message} //modified to return an object, or else SignUpComponent.js will complain that data is undefined when there is an error
+        })
+    );
+};

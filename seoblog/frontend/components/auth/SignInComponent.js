@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react';
 import { signin, saveData } from '@/actions/auth';
 import { useRouter } from 'next/navigation';
 import { getLocalStorageUser } from '@/actions/auth';
+import Link from 'next/link';
 
 const SignInComponent = () => {
     const router = useRouter();
@@ -76,6 +77,7 @@ const SignInComponent = () => {
 
     const signinForm = () => {
         return (
+            <>
             <form onSubmit={handleSubmit}>
                 <div className='form-group' style={{marginBottom: 20}}>
                     <input value={email} onChange={handleChange('email')} type="email" className="form-control" placeholder="Type your email"/>
@@ -88,8 +90,14 @@ const SignInComponent = () => {
                 <div>
                     <button className="btn btn-primary">Sign In</button>
                 </div>
-
             </form>
+            <br/>
+            <Link href="/auth/password/forgot">
+                <button className='btn btn-outline-danger btn-sm'>
+                    Reset Password
+                </button>
+            </Link>
+            </>
         )
     }
 

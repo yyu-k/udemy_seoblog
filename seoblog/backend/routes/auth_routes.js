@@ -15,5 +15,15 @@ router.get('/secret', auth_controllers.require_sign_in, (req, res) => {
         user : req.auth
     })
 })
+router.put('/forgot-password', 
+    auth_validators.forgetPasswordValidator,
+    run_validation,
+    auth_controllers.forgotPassword)
+router.put('/reset-password', 
+    auth_validators.resetPasswordValidator,
+    run_validation,
+    auth_controllers.resetPasswordMiddleware,
+    auth_controllers.resetPassword)
+
 
 module.exports = router;

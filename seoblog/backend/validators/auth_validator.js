@@ -22,3 +22,24 @@ exports.user_signin_validator = [
         .isLength({min : CONSTANTS.min_password_length})
         .withMessage(`Password does not meet minimum required length of ${CONSTANTS.min_password_length}`)
 ]
+
+exports.forgetPasswordValidator = [
+    check('email')
+        .not()
+        .isEmpty()
+        .isEmail()
+        .withMessage('Must be a valid email address provided'),
+];
+
+exports.resetPasswordValidator = [
+    check('resetPasswordLink')
+        .not()
+        .isEmpty()
+        .isJWT()
+        .withMessage(`Something has gone wrong with the reset password link`),
+    check('newPassword')
+        .not()
+        .isEmpty()
+        .isLength({min : CONSTANTS.min_password_length})
+        .withMessage(`Password does not meet minimum required length of ${CONSTANTS.min_password_length}`)
+];

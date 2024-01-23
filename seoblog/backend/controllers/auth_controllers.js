@@ -4,7 +4,8 @@ const  { nanoid } = require('nanoid');
 const { logger } = require('../backend_logger')
 const jwt = require('jsonwebtoken');
 const {expressjwt} = require('express-jwt');
-const generateDBErrorMsg = require('../helpers/generateDBErrorMsg');
+const {generateDBErrorMsg} = require('../helpers/generateDBErrorMsg');
+const {sendEmailWithNodemailer} = require('../helpers/email');
 
 exports.signup = (req, res) => {
     const {name, email, password} = req.body;
@@ -163,6 +164,111 @@ exports.canUpdateDeleteBlog = (req, res, next) => {
             })
         } else {
             next();
+        }
+    })
+    .catch(err => {
+        return res.status(400).json({
+            error : generateDBErrorMsg(err)
+        });
+    })
+}
+
+exports.forgotPassword = (req, res) => {
+    const {email} = req.body;
+    User.findOne({email})
+    .exec()
+    .then((user) => {
+        if (!user) {
+            return res.status(401).json({
+                error : 'User with the email does not exist'
+            })
+        } else {
+            const token = jwt.sign({
+                _id : user._id,
+            }, process.env.JWT_RESET_SECRET,
+            {expiresIn: '10m'});
+            //Prepare email with reset link
+            const emailData = {
+                from: process.env.OUTLOOK_EMAIL,
+                to: email,
+                subject: "Password Reset Link",
+                html: `
+                    <p>Please use the following link to reset your password:</p>
+                    <p>${process.env.CLIENT_URL}/auth/password/reset/${token}</p>
+                    <p>This link expires in 10 minutes.</p>
+                    <hr />
+                    <p>This email is sent as part of a web dev tutorial - please ignore</p>
+                `,
+              };
+            //update user with reset password link
+            user.updateOne({reset_password_link : token})
+            .exec()
+            .then(user => {
+                return sendEmailWithNodemailer(req, res, emailData)
+            })
+            .catch(err => {
+                return res.status(400).json({
+                    error : generateDBErrorMsg(err)
+                })
+            })
+            
+            
+        }
+    })
+    .catch(err => {
+        return res.status(400).json({
+            error : generateDBErrorMsg(err)
+        });
+    })
+}
+
+exports.resetPasswordMiddleware = (req, res, next) => {
+    //Note: nextWithError works because any arguement passed to next() means that the middleware encountered an error 
+    //https://expressjs.com/en/guide/error-handling.html
+    const nextWithError = (err) => {
+        if (err) {
+          return (res.status(err.status).json({
+            error: err.message
+          }))
+        }
+        next();
+      }
+    // Authenticate as usual
+    return expressjwt({
+        secret: process.env.JWT_RESET_SECRET,
+        algorithms: ["HS256"],
+        getToken: function (req) {
+            return req.body.resetPasswordLink
+        },
+        onExpired: function(req, err) {
+            err.message = 'Link has expired, please try resetting again';
+            throw err; 
+        }
+    })(req, res, nextWithError)
+}
+
+exports.resetPassword = (req, res) => {
+    const {resetPasswordLink, newPassword} = req.body;
+    User.findOne({reset_password_link : resetPasswordLink})
+    .then(user => {
+        if (!user) {
+            return res.status(404).json({
+                error : 'User not found'
+            })
+        } else {
+            user.password = newPassword;
+            user.reset_password_link = '';
+            user.save()
+            .then(user => {
+                res.json({
+                    message: "Password reset succeeded"
+                })
+            })
+            .catch(err => {
+                return res.status(400).json({
+                    error : generateDBErrorMsg(err)
+                });
+            })
         }
     })
     .catch(err => {

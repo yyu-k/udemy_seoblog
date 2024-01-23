@@ -1,3 +1,5 @@
+const { logger } = require("../backend_logger")
+
 exports.generateDBErrorMsg = (err) => {
     let errorMsg;
     switch(err.code) {
@@ -8,5 +10,6 @@ exports.generateDBErrorMsg = (err) => {
         default:
             errorMsg = 'Something has gone wrong with the database operation';
     }
+    logger.error(err.message);
     return `Error ${err.code}: ${errorMsg}`;
 }

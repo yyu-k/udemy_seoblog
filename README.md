@@ -12,6 +12,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 9. React documentation provides that "You might be tempted to use an item’s index in the array as its key. In fact, that’s what React will use if you don’t specify a key at all. But the order in which you render items will change over time if an item is inserted, deleted, or if the array gets reordered. Index as a key often leads to subtle and confusing bugs." - this advice did not seem to be heeded by the course author. Index occasionally changed (e.g. to the _id provided by mongodb) for this reason but this was not consistently done. 
 10. Added ImageOrNone component to display a NO IMAGE image where there is none to display for experimentation purpose
 11. Wrote my own simple comment component, since there is no free disqus plan available anymore and there is not much learning value to digging up a free embedding solution.
+12. Instead of using 'jsonwebtoken' for verification that the token used for password resetting has not expired, created separate express-jwt middleware (auth_controllers.resetPasswordMiddleware) instead for consistency/experimentation
 
 <h3>Random issues fixed</h3>
 1. Lodash merge will merge arrays instead of reassign the variable - this creates a problem when updating tags/categories of blogs, where additions will work but not removals. Changed to lodash assign. 
@@ -74,7 +75,7 @@ Notes:
 6. The problem with using the url as parameters for the purpose of API calls is that one has to be sure the parameters are always in English - an api call to e.g. /tag/delete/日本語 probably wouldn't work well
 7. For some reason, if FormData is used directly (e.g. const formData = new FormData()) instead of being part of an object (const state = {..., formData : new FormData()}), values that are set will disappear and the backend will receive empty fields. 
 8. Putting a Link inside a section causes a hydration error. The hydration error appeared in the http://localhost:3000/blogs page, and removing the Card component made it clear that the Card component was the issue. Then the JSX was progressively removed and tested in the Card component to figure out what was causing the hydration error. 
-9. There is a strange bug where the first login on firefox causes a hydration error - but this error doesn't repeat even after restarting the browser / backend / frontend - not quite sure where it is coming from or just dev mode wierdness. UPDATE: This seems to be caused by the password manager addon - if the password manager prompt is dismissed, the hydration error won't appear. 
+9. There is a strange bug where the first login on firefox causes a hydration error - but this error doesn't repeat even after restarting the browser / backend / frontend - not quite sure where it is coming from or just dev mode wierdness. UPDATE: This seems to be caused by the password manager addon - if the password manager prompt is dismissed, the hydration error won't appear. See https://github.com/facebook/react/issues/24430 
 10. To check what the server rendered component looks like with no client rendering, disable javascript. 
 11. There are a number of pages where the number of blogs loaded is not controlled e.g. in the categories page, all blogs with that category is immediately loaded. If got time, need to do some kind of load more feature instead of loading any number of potential blogs. 
 12. Caching behaviour for fetch is different between dev and build mode. It's generally okay to fetch the same information multiple times e.g. for the once for the opengraph-image.js, once for the main page, etc, because in production mode the fetch will only occur once. See https://nextjs.org/docs/app/building-your-application/caching#request-memoization
@@ -82,5 +83,5 @@ Notes:
 14. The ordering of routes matters where there are variables e.g. /blog/:slug. If router.get(/blog/search) is placed after router.get(/blog/:slug), then the calls to search will always be treated as a slug. 
 15. Changing size of container : see: https://stackoverflow.com/questions/20984874/how-to-make-a-smaller-container-in-bootstrap
 16. Centering a div: see : https://stackoverflow.com/questions/42388989/bootstrap-center-vertical-and-horizontal-alignment (used mx-auto)
-
+17. If NavLink is used in the header instead of NewNavLink (which incorporates Link from react/link), clicking on the header links will cause a reload of the header, with the effect that header components depending on states would flash. E.g. if username is to be shown on the header, on click the username will disappear, then appear again as the state gets loaded. 
 

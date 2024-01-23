@@ -3,7 +3,7 @@ require('dotenv').config();
 const nodeMailer = require("nodemailer");
 const { logger } = require('../backend_logger')
  
-exports.sendEmailWithNodemailer = (req, res, emailData) => {
+exports.sendEmailWithNodemailer = (req, res, emailData, successMsg = '') => {
   const transporter = nodeMailer.createTransport({
     host: "smtp-mail.outlook.com",
     port: 587,
@@ -23,6 +23,7 @@ exports.sendEmailWithNodemailer = (req, res, emailData) => {
     .then((info) => {
       return res.json({
         success: true,
+        message: successMsg
       });
     })
     .catch((err) => {

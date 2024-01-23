@@ -116,16 +116,12 @@ const Header = () => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ms-auto" navbar>
             <NavItem>
-              <NavLink href="/blogs">
-                Blogs
-              </NavLink>
+              <NewNavLink href='/blogs' name="Blogs"/>
             </NavItem>
             <ShowSignInSignUp bool={!user}/>
             <ShowSignOut bool={user}/>
             <NavItem>
-              <NavLink href="/contact">
-                Contact
-              </NavLink>
+              <NewNavLink href="/contact" name="Contact"/>
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
