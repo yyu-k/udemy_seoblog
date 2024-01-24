@@ -56,16 +56,23 @@ const user_schema = new mongoose.Schema({
 
 user_schema.methods = {
     //authenticate password
-    authenticate : function(plainText){
-        return bcrypt.compareSync(plainText, this.hashed_password)
+    authenticate : async function(plainText){
+        const result = await bcrypt.compare(plainText, this.hashed_password);
+        return result;
+    },
+    setPassword : async function(password) {
+        this.hashed_password = await bcrypt.hash(password, CONSTANTS.bcrypt_salt_rounds);
+        console.log(this.hashed_password);
+        return this;
     }
 }
 
 //virtual fields do not get saved into the db
-user_schema.virtual('password')
-    //function keyword is needed so that this scope can be properly accessed
-    .set(function(password) {
-        this.hashed_password = bcrypt.hashSync(password,CONSTANTS.bcrypt_salt_rounds)
-    })
+//Removed because using synchronous functions in backend is a bad idea
+// user_schema.virtual('password')
+//     //function keyword is needed so that this scope can be properly accessed
+//     .set(function(password) {
+//         this.hashed_password = bcrypt.hashSync(password,CONSTANTS.bcrypt_salt_rounds)
+//     })
 
 module.exports = mongoose.model('User', user_schema);

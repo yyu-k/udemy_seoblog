@@ -7,12 +7,56 @@ const {expressjwt} = require('express-jwt');
 const {generateDBErrorMsg} = require('../helpers/generateDBErrorMsg');
 const {sendEmailWithNodemailer} = require('../helpers/email');
 
+exports.preSignup = (req, res) => {
+    const {name, email, password} = req.body;
+    const user = User.findOne({email : email.toLowerCase()})
+        .then(user => {
+            if (user) {
+                res.status(400).json({
+                    error : 'Email is taken. If you have forgotten your password, please reset it instead'
+                });
+            }
+            return user
+        })
+        .catch(err => {
+            res.status(400).json({
+                error : generateDBErrorMsg(err)
+            });
+            return 1;
+        })
+    user.then(user => {
+        if (user) {
+            return;
+        } else {
+            const token = jwt.sign(
+                {name, email, password}, 
+                process.env.JWT_ACC_ACTIVATION_SECRET, 
+                {expiresIn: '30m'}
+                );
+            //Prepare email with reset link
+            const emailData = {
+                from: process.env.OUTLOOK_EMAIL,
+                to: email,
+                subject: "Account Activation Link",
+                html: `
+                    <p>Please use the following link to activate your account:</p>
+                    <p>${process.env.CLIENT_URL}/auth/account/activate/${token}</p>
+                    <p>This link expires in 30 minutes.</p>
+                    <hr />
+                    <p>This email is sent as part of a web dev tutorial - please ignore</p>
+                `
+                };
+            sendEmailWithNodemailer(req, res, emailData, `Activation email has been sent to ${email}`)
+        }
+    })
+}
+
 exports.signup = (req, res) => {
     const {name, email, password} = req.body;
     //check if user email already exists
     User.findOne({email : email})
         .exec()
-        .then((result) => { 
+        .then(async (result) => { 
             if (result){//user already exists, reject
                 return res.status(400).json({
                     error: 'Email is taken'
@@ -20,8 +64,10 @@ exports.signup = (req, res) => {
             } else {
                 const username = nanoid();
                 const profile = `${process.env.CLIENT_URL}/profile/${username}` //url for user
-                const new_user = User({username, password, profile, email, name}) //ordering doesn't matter
-                new_user.save()
+                const new_user = User({username, profile, email, name}) //ordering doesn't matter
+                await new_user.setPassword(password);
+                new_user
+                    .save()
                     .then((success) => {
                         res.json({
                             message : "Sign up success! Please sign in"
@@ -47,13 +93,14 @@ exports.signin = (req, res) => {
     //check if user email exists
     User.findOne({email}) //shortcut of {email : email}
         .exec()
-        .then((user) => { 
+        .then(async (user) => { 
             if (!user){//user doesn't exists, reject
                 return res.status(400).json({
                     error: 'Authentication failure'
-                })
-            //authentication fails
-            } else if (!user.authenticate(password)) {
+                });
+            }
+            const authResult = await user.authenticate(password);
+            if (!authResult) {
                 return res.status(400).json({
                     error: 'Authentication failure'
                 })
@@ -249,16 +296,18 @@ exports.resetPasswordMiddleware = (req, res, next) => {
 
 exports.resetPassword = (req, res) => {
     const {resetPasswordLink, newPassword} = req.body;
-    User.findOne({reset_password_link : resetPasswordLink})
-    .then(user => {
+    User
+    .findOne({reset_password_link : resetPasswordLink})
+    .then(async user => {
         if (!user) {
             return res.status(404).json({
                 error : 'User not found'
             })
         } else {
-            user.password = newPassword;
             user.reset_password_link = '';
-            user.save()
+            await user.setPassword(newPassword);
+            user
+            .save()
             .then(user => {
                 res.json({
                     message: "Password reset succeeded"

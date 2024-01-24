@@ -68,7 +68,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 
 Notes:
 1. next 14.0.1 doesn't seem to work in Windows - run this in Linux or use WSL2 (actually the problem seems to be that the directory name cannot contain the words "ude" in Windows for some reason) 
-2. mongoose "required" validation will fail if the setter depends on a promise (the promise will not be resolved in time - e.g. bcrypt.hash)
+2. mongoose "required" validation will fail if the setter depends on a promise (the promise will not be resolved in time - e.g. bcrypt.hash). More generally, virtual fields getters and setters DO NOT WORK with promises. Initially resolved by using the synchronous versions of the functions, but as this is bad practice, reworked by writing async instance methods. async must also be peppered onto various callbacks for this to work, because the instance methods MUST be awaitted or they won't work either. 
 3. The reactstrap functions MUST be placed within the body tags (as opposed to within html etc)
 4. Arguments for the navbar in reactstrap needs to be keyed in manually (e.g. expand={'md'}), otherwise the default values will hold and the navbar will not change its formatting regardless of screensize etc.
 5. admin password is adminpassword

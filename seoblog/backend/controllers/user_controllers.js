@@ -53,7 +53,7 @@ exports.publicProfile = (req, res) => {
 
 exports.update = (req, res) => {
     const form = new formidable.IncomingForm({keepExtensions : true});
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async (err, fields, files) => {
         if (err) {
             return res.status(400).json({
                 error : err.message
@@ -61,13 +61,19 @@ exports.update = (req, res) => {
         }
         const user = req.profile;
         const values = firstValues(form, fields, []);
-        //validation
+        //validation of password
         if (values.password && values.password.length < 6) {
             return res.status(400).json({
                 error : 'Password is shorter than the minimum length of 6 characters'
             })
-        }      
+        } 
+        //hashpassword password
+        if (values.password) {
+            await user.setPassword(values.password);
+            values.password = undefined; 
+        }
         _.extend(user, values);
+        console.log(user.hashed_password);
         const { photo } = firstValues(form, files, []);
         if (photo) {
             if (photo.size > 1000000) {

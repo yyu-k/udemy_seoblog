@@ -5,6 +5,7 @@ import { getCookie } from "@/actions/auth";
 import { getProfile, updateProfile } from "@/actions/user";
 import { ImageOrNone } from "../ImageOrNone";
 import { updateUser } from "@/actions/auth";
+import Loading from "../LoadingComponent";
 
 const ProfileUpdate = () => {
     const [values, setValues] = useState({
@@ -19,6 +20,7 @@ const ProfileUpdate = () => {
         photo: '',
         userData: new FormData()
     });
+    const [firstLoad, setFirstLoad] = useState(true);
     const [pic, setPic] = useState(<></>);
     const token = getCookie('token');
 
@@ -33,6 +35,7 @@ const ProfileUpdate = () => {
             return data;
         }
         init().then(data => {
+            setFirstLoad(false);
             if (data.photo) {
                 const base64String = Buffer.from(data.photo.data.data).toString('base64')
                 setPic(showPicture(`data:${data.photo.contentType};base64,${base64String}`))
@@ -181,6 +184,20 @@ const ProfileUpdate = () => {
         )
     }
 
+    const mainContent = () => {
+        if (firstLoad) {
+            return <Loading text="profile"/>
+        }
+        return (
+            <>
+                {showSuccess()}
+                {showLoading()}
+                {showError()}
+                {profileUpdateForm()}
+            </>
+        )
+    }
+
     return (
         <>
             <div className="container">
@@ -189,10 +206,7 @@ const ProfileUpdate = () => {
                         {pic}
                     </div>
                     <div className="col-md-8 mb-5">
-                        {showSuccess()}
-                        {showLoading()}
-                        {showError()}
-                        {profileUpdateForm()}
+                        {mainContent()}
                     </div>
                 </div>
             </div>

@@ -1,6 +1,24 @@
 import {API} from '../config';
 import cookie from 'js-cookie';
 
+export const preSignup = (user) => {
+    return (
+        fetch(`${API}/pre-signup`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        }).then(response => {
+            return response.json();
+        })
+        .catch(err => {
+            return {error : err.message} //modified to return an object, or else SignUpComponent.js will complain that data is undefined when there is an error
+        })
+    );
+}
+
 export const signup = (user) => {
     return (
         fetch(`${API}/signup`, {

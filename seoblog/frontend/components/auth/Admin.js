@@ -3,7 +3,6 @@
 const { useEffect, useState } = require("react");
 import { useRouter } from 'next/navigation';
 import { getLocalStorageUser } from '@/actions/auth';
-import Loading from '../LoadingComponent';
 
 const Admin = ({children}) => {
     const router = useRouter();

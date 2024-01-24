@@ -35,6 +35,11 @@ app.use('/api', categoryRoutes);
 app.use('/api', tagRoutes);
 app.use('/api', formRoutes);
 app.use('/api', commentRoutes);
+app.use('/api', (req, res, next) => {
+    return res.status(404).json({
+        error : '404 - requested resource not found. Please check if the API endpoint is correct'
+    });
+})
 
 
 //cors - deal with cross-origin requests

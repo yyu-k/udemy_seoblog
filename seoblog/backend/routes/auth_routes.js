@@ -6,6 +6,10 @@ const auth_controllers = require('../controllers/auth_controllers')
 const auth_validators = require('../validators/auth_validator')
 const {run_validation} = require('../validators/index_validator')
 
+router.post('/pre-signup', 
+    auth_validators.user_signup_validator, 
+    run_validation, 
+    auth_controllers.preSignup)
 router.post('/signup', auth_validators.user_signup_validator, run_validation, auth_controllers.signup)
 router.post('/signin', auth_validators.user_signin_validator, run_validation, auth_controllers.signin)
 router.get('/signout', auth_controllers.signout);

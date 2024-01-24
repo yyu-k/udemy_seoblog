@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Loading from '@/components/LoadingComponent';
 
 export default function Page() {
   return (
