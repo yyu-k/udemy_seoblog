@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const {expressjwt} = require('express-jwt');
 const {generateDBErrorMsg} = require('../helpers/generateDBErrorMsg');
 const {sendEmailWithNodemailer} = require('../helpers/email');
+const bcrypt = require("bcrypt");
+const { CONSTANTS } = require('../CONSTANTS');
 
 exports.preSignup = (req, res) => {
     const {name, email, password} = req.body;
@@ -24,12 +26,13 @@ exports.preSignup = (req, res) => {
             });
             return 1;
         })
-    user.then(user => {
+    user.then(async user => {
         if (user) {
             return;
         } else {
+            hashedPassword = await bcrypt.hash(password, CONSTANTS.bcrypt_salt_rounds);
             const token = jwt.sign(
-                {name, email, password}, 
+                {name, email, hashedPassword}, 
                 process.env.JWT_ACC_ACTIVATION_SECRET, 
                 {expiresIn: '30m'}
                 );

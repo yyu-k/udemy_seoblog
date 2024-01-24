@@ -4,6 +4,7 @@ The course can be accessed on https://www.udemy.com/course/react-node-nextjs-ful
 The course's repository is on https://github.com/PacktPublishing/React-Node-FullStack---Multi-User-Blogging-Platform-with-SEO-1
 
 1. Changed password hashing/salting to bcrypt (instead of built-in crypto)
+2. The tutorial suggested that, for the purpose of creating an email authentication link when signing up, the link could include the JWT of the username, PASSWORD, and email. Not sure if this is a good idea given that the contents of the JWT are public; the JWT prevents modification, not reading. Slightly reworked so that the JWT contains the hashed password instead, but there are probably better ways of doing email authentication.
 4. Changed shortid to nanoid
 5. When error is caught, the e.message should be returned instead of the Error object. More generally changes were made to error handling to simplify the processing of the error message / display more details to the front end
 6. Amended require_sign_in so that absence of authorization token will be caught and the user will receive a 401 with a JSON (instead of the whole error object)
