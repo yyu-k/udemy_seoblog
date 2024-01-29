@@ -13,7 +13,8 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 9. React documentation provides that "You might be tempted to use an item’s index in the array as its key. In fact, that’s what React will use if you don’t specify a key at all. But the order in which you render items will change over time if an item is inserted, deleted, or if the array gets reordered. Index as a key often leads to subtle and confusing bugs." - this advice did not seem to be heeded by the course author. Index occasionally changed (e.g. to the _id provided by mongodb) for this reason but this was not consistently done. 
 10. Added ImageOrNone component to display a NO IMAGE image where there is none to display for experimentation purpose
 11. Wrote my own simple comment component, since there is no free disqus plan available anymore and there is not much learning value to digging up a free embedding solution.
-12. Instead of using 'jsonwebtoken' for verification that the token used for password resetting has not expired, created separate express-jwt middleware (auth_controllers.resetPasswordMiddleware) instead for consistency/experimentation
+12. Instead of using 'jsonwebtoken' for verification that the token used for password resetting has not expired, created separate express-jwt middleware (auth_controllers.resetPasswordMiddleware) instead for consistency/experimentation. Sa,e for auth_controllers.signup_token_checker.
+13. Amended backend auth_controllers.signup to prevent users clicking the same activation link multiple times. 
 
 <h3>Random issues fixed</h3>
 1. Lodash merge will merge arrays instead of reassign the variable - this creates a problem when updating tags/categories of blogs, where additions will work but not removals. Changed to lodash assign. 
