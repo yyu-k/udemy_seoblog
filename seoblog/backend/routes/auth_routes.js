@@ -14,6 +14,7 @@ router.post('/signup',
     auth_controllers.signup_token_checker,
     auth_controllers.signup)
 router.post('/signin', auth_validators.user_signin_validator, run_validation, auth_controllers.signin)
+router.post('/google-login', auth_controllers.googleLogin);
 router.get('/signout', auth_controllers.signout);
 //test for varifying jwt was signed with secret, using express-jwt middleware
 router.get('/secret', auth_controllers.require_sign_in, (req, res) => {

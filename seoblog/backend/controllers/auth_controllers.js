@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const {expressjwt} = require('express-jwt');
 const {generateDBErrorMsg} = require('../helpers/generateDBErrorMsg');
 const {sendEmailWithNodemailer} = require('../helpers/email');
+const {OAuth2Client} = require('google-auth-library');
 const bcrypt = require("bcrypt");
 const { CONSTANTS } = require('../CONSTANTS');
 
@@ -401,3 +402,61 @@ exports.resetPassword = (req, res) => {
         });
     })
 }
+
+//google login
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+exports.googleLogin = (req, res) => {
+    const idToken = req.body.tokenId;
+    const payloadPromise = client.verifyIdToken({idToken, audience : process.env.GOOGLE_CLIENT_ID})
+        .then(response => response.getPayload())
+    const userPromise = payloadPromise.then(payload => {
+        if (!payload.email_verified) {
+            throw new Error(`Google login failed`);
+        }
+        return User
+            .findOne({email : payload.email})
+            .exec()
+            .then(user => {
+                if (user) {
+                    return user;
+                } else {
+                    const username = nanoid();
+                    const profile = `${process.env.CLIENT_URL}/profile/${username}`;
+                    const hashed_password = nanoid(64);
+                    const newUser = new User({
+                        name : payload.name,
+                        email : payload.email,
+                        username,
+                        hashed_password,
+                        profile
+                    });
+                    return newUser.save()
+                }
+            })
+            .catch(err => {
+                throw new Error(generateDBErrorMsg(err));
+            })
+    });
+    userPromise
+        .then(user => {
+            const token = jwt.sign({_id : user._id},
+                process.env.JWT_SECRET,
+                {expiresIn:'1d'});
+            res.cookie('token', token, {expiresIn: '1d'});
+            res.json({token, 
+                user : {
+                    _id : user._id,
+                    email : user.email,
+                    name : user.name,
+                    role : user.role
+                }
+            })
+        })
+        .catch(err => {
+            return res.status(400).json({
+                error : err.message
+            })
+        })
+}
+
+
