@@ -19,7 +19,7 @@ export const preSignup = (user) => {
     );
 }
 
-export const signup = (user) => {
+export const signup = (token) => {
     return (
         fetch(`${API}/signup`, {
             method: 'POST',
@@ -27,7 +27,7 @@ export const signup = (user) => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify(token)
         }).then(response => {
             return response.json();
         })

@@ -1,7 +1,7 @@
 'use client'
 
 import {useState, useEffect} from 'react';
-import { signup, getLocalStorageUser } from '@/actions/auth';
+import { preSignup, getLocalStorageUser } from '@/actions/auth';
 import { useRouter } from 'next/navigation';
 
 const SignUpComponent = () => {
@@ -32,7 +32,7 @@ const SignUpComponent = () => {
         e.preventDefault(); //browser will show network error otherwise
         setValues({...values, loading : true, error: false});
         const user = {name, email, password};
-        signup(user)
+        preSignup(user)
         .then((data) => { //this assumes that the API gives a string as an error instead of the actual error object
             if (data.error) {
                 setValues({...values, error: data.error, loading: false});

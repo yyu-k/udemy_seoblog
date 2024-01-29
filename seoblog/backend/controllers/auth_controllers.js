@@ -54,42 +54,114 @@ exports.preSignup = (req, res) => {
     })
 }
 
-exports.signup = (req, res) => {
-    const {name, email, password} = req.body;
-    //check if user email already exists
-    User.findOne({email : email})
-        .exec()
-        .then(async (result) => { 
-            if (result){//user already exists, reject
-                return res.status(400).json({
-                    error: 'Email is taken'
-                })
-            } else {
-                const username = nanoid();
-                const profile = `${process.env.CLIENT_URL}/profile/${username}` //url for user
-                const new_user = User({username, profile, email, name}) //ordering doesn't matter
-                await new_user.setPassword(password);
-                new_user
-                    .save()
-                    .then((success) => {
-                        res.json({
-                            message : "Sign up success! Please sign in"
-                            //user : success //for debugging
-                        })
-                    })
-                    .catch((err) => {
-                        return res.status(400).json({ //bad request
-                            error: generateDBErrorMsg(err) //edited from just err
-                        })
-                    })                
-                }
-        })
-        .catch((err) => {
-            return res.status(400).json({ //bad request
-                error: err.message
-            })
-        })
+exports.signup_token_checker = (req, res, next) => {
+    //Note: nextWithError works because any arguement passed to next() means that the middleware encountered an error 
+    //https://expressjs.com/en/guide/error-handling.html
+    const nextWithError = (err) => {
+        if (err) {
+          logger.error(err);
+          let errorMsg;
+          switch(err.inner.name) {
+            case 'TokenExpiredError':
+                errorMsg = 'Token expired - please try signing up again';
+                break;
+            default:
+                errorMsg = err.message;
+            }   
+          return (res.status(err.status).json({
+            error: errorMsg
+          }))
+        }
+        next();
+      }
+    // Authenticate as usual
+    return expressjwt({
+        secret: process.env.JWT_ACC_ACTIVATION_SECRET,
+        algorithms: ["HS256"],
+        getToken: function (req) {
+            return req.body.token
+        }
+    })(req, res, nextWithError)
 }
+
+exports.signup = (req, res) => {
+    const {name, email, hashedPassword} = req.auth;
+    const user = User.findOne({email : email.toLowerCase()})
+        .then(user => {
+            if (user) {
+                res.status(400).json({
+                    error : `Account with the email ${email} has already been activated`
+                });
+            }
+            return user
+        })
+        .catch(err => {
+            res.status(400).json({
+                error : generateDBErrorMsg(err)
+            });
+            return 1;
+        })
+    user.then(user => {
+        if (user) {
+            return 
+        } else {
+            const username = nanoid();
+            const profile = `${process.env.CLIENT_URL}/profile/${username}` //url for user
+            const new_user = new User({username, profile, email, name, hashed_password : hashedPassword}); //ordering doesn't matter
+            new_user
+                .save()
+                .then((success) => {
+                    res.json({
+                        success : true,
+                        message : "Sign up success! Please sign in"
+                    })
+                })
+                .catch((err) => {
+                    return res.status(400).json({ //bad request
+                        error: generateDBErrorMsg(err) //edited from just err
+                    })
+                })                
+        }
+    });
+}
+
+// old signup function deployed when there is no activation email and user signs up directly
+// exports.signup = (req, res) => {
+//     const {name, email, password} = req.body;
+//     //check if user email already exists
+//     User.findOne({email : email})
+//         .exec()
+//         .then(async (result) => { 
+//             if (result){//user already exists, reject
+//                 return res.status(400).json({
+//                     error: 'Email is taken'
+//                 })
+//             } else {
+//                 const username = nanoid();
+//                 const profile = `${process.env.CLIENT_URL}/profile/${username}` //url for user
+//                 const new_user = User({username, profile, email, name}) //ordering doesn't matter
+//                 await new_user.setPassword(password);
+//                 new_user
+//                     .save()
+//                     .then((success) => {
+//                         res.json({
+//                             message : "Sign up success! Please sign in"
+//                             //user : success //for debugging
+//                         })
+//                     })
+//                     .catch((err) => {
+//                         return res.status(400).json({ //bad request
+//                             error: generateDBErrorMsg(err) //edited from just err
+//                         })
+//                     })                
+//                 }
+//         })
+//         .catch((err) => {
+//             return res.status(400).json({ //bad request
+//                 error: err.message
+//             })
+//         })
+// }
 
 exports.signin = (req, res) => {
     const {email, password} = req.body;
