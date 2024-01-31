@@ -7,3 +7,12 @@
     max-height: 500px;
     object-fit: cover
 }
+
+/* .g_id_signin > div > div:first-child{
+    display: none;
+} */
+
+.GoogleLoginButtonContainer {
+    height: 44px;
+    width: auto;
+ }

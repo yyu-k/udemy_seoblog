@@ -61,8 +61,6 @@ export const signout = (next) => {
     next();
     return fetch(`${API}/signout`, {
         method: 'GET'
-    }).then(response => {
-        console.log('signout success');
     }).catch(err => {
         console.log(err.message);
     })
@@ -170,6 +168,24 @@ export const resetPassword = (resetInfo) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(resetInfo)
+        }).then(response => {
+            return response.json();
+        })
+        .catch(err => {
+            return {error : err.message} //modified to return an object, or else SignUpComponent.js will complain that data is undefined when there is an error
+        })
+    );
+};
+
+export const loginWithGoogle = (user) => {
+    return (
+        fetch(`${API}/google-login`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
         }).then(response => {
             return response.json();
         })

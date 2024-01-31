@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react';
 import { signin, saveData } from '@/actions/auth';
 import { useRouter } from 'next/navigation';
 import { getLocalStorageUser } from '@/actions/auth';
+import { GoogleLogin } from './GoogleLogin';
 import Link from 'next/link';
 
 const SignInComponent = () => {
@@ -107,6 +108,7 @@ const SignInComponent = () => {
             {showError()}
             {showLoading()}
             {showMessage()}
+            <GoogleLogin loginValues={values} setValues={setValues}/>
             {showForm && signinForm()}
             </>  
         )
