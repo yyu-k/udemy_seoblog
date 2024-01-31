@@ -33,9 +33,6 @@ export default function Page() {
               </li>
             </ul>
           </div>
-          <div className="col-md-8">
-            right
-          </div>
         </div>
       </Admin>
       </>

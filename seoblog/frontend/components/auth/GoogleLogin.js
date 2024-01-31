@@ -10,12 +10,12 @@ import Loading from "../LoadingComponent";
 export const GoogleLogin = ({loginValues, setValues }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
-    //Code taken from
+    //Code modified from
     //https://stackoverflow.com/questions/75692128/react-google-login-package-is-deprecated-what-is-to-be-the-replacement-for-the
     useEffect(() => {
         window.onGoogleSuccess = (response) => {
             // hit your backend, passing up response.credential
-            const user = {tokenId : response.credential};
+            const user = {tokenId : response.client_id};
             loginWithGoogle(user)
             .then(data => {
                 if (data.error) {
@@ -31,7 +31,6 @@ export const GoogleLogin = ({loginValues, setValues }) => {
                     });
                 }
             })
-
         }
         // Inject the google provided script 
         // (an importable module would be nicer here)

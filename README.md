@@ -68,6 +68,7 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 11. getIntitialProps etc no longer used in the app router - just fetch directly. See e.g. https://stackoverflow.com/questions/76267351/how-to-fetch-data-server-side-in-the-latest-next-js-tried-getstaticprops-but-it. Note that fetch must be run with the option {cache : no-store} for pages where the content may change e.g. blogs, or the page will not update. 
 12. The method utilised by the course to update an image on change (e.g. user changes the profile picture) is to use something along the lines of "img src=${API}/user/photo/${username_for_photo}", where username_for_photo is a state. This does not work; either the image is not being re-rendered after the upload, or the API call immediately after the change returns the old image for one reason or another. The solution is to use the photo buffer that is returned immediately after the change, coupled with a "pic" state i.e. const base64String = Buffer.from(data.photo.data.data).toString('base64'), setPic(showPicture(data:${data.photo.contentType};base64,${base64String})), where showPicture returns a JSX fragment. 
 13. router.query.message replaced with useSearchParams
+14. Google Analytics tag implemented with https://nextjs.org/docs/messages/next-script-for-ga
 
 <h4>CSS/Bootstrap</h4>
 

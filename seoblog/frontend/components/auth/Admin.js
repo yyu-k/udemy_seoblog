@@ -11,7 +11,7 @@ const Admin = ({children}) => {
         if(!getLocalStorageUser()) {
             router.push('/signin');
         } else if (getLocalStorageUser().role != 1) {
-            router.push('/');
+            router.push('/user');
         } else {
             setIsLoading(false);
         }
