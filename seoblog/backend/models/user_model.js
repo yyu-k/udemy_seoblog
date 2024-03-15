@@ -62,7 +62,6 @@ user_schema.methods = {
     },
     setPassword : async function(password) {
         this.hashed_password = await bcrypt.hash(password, CONSTANTS.bcrypt_salt_rounds);
-        console.log(this.hashed_password);
         return this;
     }
 }

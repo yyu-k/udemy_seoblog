@@ -60,6 +60,7 @@ exports.update = (req, res) => {
             })
         }
         const user = req.profile;
+        const existingRole = user.role; //prevent role change
         const values = firstValues(form, fields, []);
         //validation of password
         if (values.password && values.password.length < 6) {
@@ -73,7 +74,7 @@ exports.update = (req, res) => {
             values.password = undefined; 
         }
         _.extend(user, values);
-        console.log(user.hashed_password);
+        user.role = existingRole; //restore the original role
         const { photo } = firstValues(form, files, []);
         if (photo) {
             if (photo.size > 1000000) {

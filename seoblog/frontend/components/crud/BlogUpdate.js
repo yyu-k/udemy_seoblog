@@ -139,7 +139,6 @@ export const BlogUpdate = ({slug}) => {
         readSingleBlog(slug)
         .then((data) => {
             if (data.error) {
-                console.log(data.error);
                 setState({...state, error : data.error});
             } else {
                 setState({...state, title : data.title});

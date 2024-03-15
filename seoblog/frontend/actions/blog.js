@@ -58,7 +58,6 @@ export const readSingleBlog = (slug) => {
         return data.json();
     })
     .catch((err) => {
-        console.log(err);
         return {
             error : err.message
         }
@@ -161,7 +160,6 @@ export const listSearch = (params) => {
         method: 'GET'
     })
     .then((data) =>{
-        console.log(data);
         return data.json();
     })
     .catch((err) => {

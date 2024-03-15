@@ -279,7 +279,6 @@ exports.update = (req, res) => {
                 res.json(data);
            })
            .catch((err) => {
-                console.log(err);
                 logger.warn(err.message);
                 res.status(400).json({
                     error : generateDBErrorMsg(err)

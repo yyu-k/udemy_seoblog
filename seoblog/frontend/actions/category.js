@@ -58,7 +58,6 @@ export const deleteCategory = (slug, token) => {
                 'Authorization' : `Bearer ${token}`
             }
         }).then(response => {
-            console.log(response);
             handleResponse(response);
             return response.json();
         })
