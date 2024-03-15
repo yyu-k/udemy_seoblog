@@ -45,11 +45,13 @@ The course's repository is on https://github.com/PacktPublishing/React-Node-Full
 4. min, max renamed to minLength, maxLength for strings
 
 <h4>Formidable</h4>
+
 1. Formidable: Method of creation/altering options slightly changed
 2. Formidable: string values of fields are now placed in an array, to be extracted with firstValues. Similar issue with photo properties. 
 3. Some fields read from form.parse() has a different name e.g. files.photo.mimetype instead of files.photo.type, where photo is the key of the form.
 
 <h4>Random extensions</h4>
+
 1. Slugify: toLowerCase is now an option ({lower : true})
 2. express-jwt: The decoded JWT payload is now available as req.auth rather than req.user
 
