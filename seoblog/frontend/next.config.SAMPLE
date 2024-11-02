@@ -1,0 +1,13 @@
+const nextConfig = {
+    publicRuntimeConfig : {
+        APP_NAME: 'SEOBLOG_TUTORIAL',
+        API_DEV: 'http://localhost:8000/api',
+        PRODUCTION: false,
+        DOMAIN_DEVELOPMENT: 'http://localhost:3000',
+        DOMAIN_PRODUCTION: '',
+        GOOGLE_CLIENT_ID:'INSERT_YOUR_GOOGLE_CLIENT_ID',
+        GOOGLE_ANALYTICS_ID:'INSERT_YOUR_GOOGLE_ANALYTICS_ID'
+    }
+};
+
+module.exports = nextConfig
